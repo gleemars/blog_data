@@ -78,3 +78,9 @@ https://www.youtube.com/watch?v=o3KXSayMvhw
 2. Jarvis OJ(题目平台)
 > https://www.jarvisoj.com/challenges
 
+3. 一个适合新手的镜像
+> https://exploit-exercises.com/protostar/
+在Download中下载protostar的镜像然后安装
+https://liveoverflow.com/binary_hacking/protostar/index.html
+
+
