@@ -1,9 +1,6 @@
 ---
-title: pwn to newer
-description: 
-categories:
-tags: 
-grammar_cjkRuby: true
+title: pwn for beginner
+description: 2018, kap0k to beginner 
 ---
 
 
@@ -12,6 +9,7 @@ grammar_cjkRuby: true
 > http://www.runoob.com/python/python-tutorial.html
 
 ### 环境
+> 环境安装可能麻烦一些,请耐心一些,有问题在群里面问.
 
 1.环境搭建视频
 > https://www.bilibili.com/video/av14550200?from=search&seid=11015206578758826690
