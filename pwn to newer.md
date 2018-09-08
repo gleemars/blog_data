@@ -65,10 +65,8 @@ grammar_cjkRuby: true
 https://www.youtube.com/watch?v=oiicCDA4RNc
 https://www.youtube.com/watch?v=o3KXSayMvhw
 
-3. elf 文件格式(这个没有时间可以先跳过)
-> https://ctf-wiki.github.io/ctf-wiki/executable/elf/elf_structure/
 
-4. plt表和got表(了解函数重定位过程)
+3. plt表和got表(了解函数重定位过程)
 > http://www.ifuryst.com/archives/Linux-PLT-GOT.html
 
 ### 其他推荐
