@@ -1,0 +1,80 @@
+---
+title: pwn to newer
+description: 
+categories:
+tags: 
+grammar_cjkRuby: true
+---
+
+
+### 前置
+1. python,编程语言很重要
+> http://www.runoob.com/python/python-tutorial.html
+
+### 环境
+
+1.环境搭建视频
+> https://www.bilibili.com/video/av14550200?from=search&seid=11015206578758826690
+
+2. linux(建议使用ubuntu16.04,可以使用vmware安装虚拟机)
+> 熟悉一些linux基本命令
+
+3. ida (必备神器)
+> https://pwntools.readthedocs.io/en/stable/
+
+4. pwngdb(调试用)
+> https://github.com/scwuaptx/Pwngdb
+
+5. ROPgadget
+> https://github.com/JonathanSalwan/ROPgadget
+
+6. libcsearcher
+> https://github.com/lieanu/LibcSearcher
+
+7. pwntools(pwn题必备)
+> https://github.com/giantbranch/pwn-env-init
+> 这个网址是环境一键搭建脚本有
+> 为64位系统提供32位运行环境支撑
+下载了libc6的源码，方便源码调试
+给gdb装上pwndbg和peda插件
+安装pwntools
+
+### 入门资料
+
+#### 最全面的新手教程
+> https://ctf-wiki.github.io/ctf-wiki/pwn/stackoverflow/stack_intro/
+> 对应题目放在
+>  https://github.com/ctf-wiki/ctfchallenges/tree/master/pwn/stackoverflow
+
+#### 前置
+> 在我们 pwn程序之前需要突破程序的保护,前提是我们要了解保护机制
+>http://yunnigu.dropsec.xyz/2016/10/08/checksec%E5%8F%8A%E5%85%B6%E5%8C%85%E5%90%AB%E7%9A%84%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6/
+
+> 函数调用: https://segmentfault.com/a/1190000007977460
+
+#### pwn 教程
+1. rop
+> 来自bamboofox的视频教程
+> https://www.youtube.com/watch?v=QYmWq2o7MtA&t=3047s
+> 对应题目会发到群里(见群文件---> rop基础题目 )
+
+2. 格式化字符串漏洞
+> 可以看https://ctf-wiki.github.io/ctf-wiki/pwn/stackoverflow/stack_intro/的教程
+> 也可以看以下视频:
+> https://www.youtube.com/watch?v=FvGhDlK36PI&t=4s
+https://www.youtube.com/watch?v=oiicCDA4RNc
+https://www.youtube.com/watch?v=o3KXSayMvhw
+
+3. elf 文件格式(这个没有时间可以先跳过)
+> https://ctf-wiki.github.io/ctf-wiki/executable/elf/elf_structure/
+
+4. plt表和got表(了解函数重定位过程)
+> http://www.ifuryst.com/archives/Linux-PLT-GOT.html
+
+### 其他推荐
+1. angelboy的入门教程视频
+> https://www.youtube.com/channel/UC_PU5Tk6AkDnhQgl5gARObA?app=desktop
+
+2. Jarvis OJ(题目平台)
+> https://www.jarvisoj.com/challenges
+
