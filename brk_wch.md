@@ -6,6 +6,9 @@ tags:
 grammar_cjkRuby: true
 ---
 
+### 写在最前面的话
+> 这个小脚本只是为了在做 pwn题 调试pie程序的时候方便下断点和查看程序自身的内存而写
+
 ### install
 > 下载 brk_wch.py 到本地
 > 执行 echo "source ------/brk_wch.py" > ~/.gdbinit
@@ -14,15 +17,18 @@ grammar_cjkRuby: true
 ---
 
 ### why need the script
-> 在我们调试开了pie保护的程序时,ida只能看到偏移,如果我们想下断点或者看程序bss段里面的变量时,可能需要先使用 vmmap 得到程序加载地址,再加上偏移才能下断点或者查看某个内存里面的变量
+> 在我们调试开了pie保护的程序时, ida只能看到偏移,如果我们想下断点或者看程序bss段里面的变量时,可能需要先使用 vmmap(gdb 有peda插件的情况下) 得到程序加载地址 proc_base ,再加上偏移 offset 才能下断点或者查看某个内存里面的变量
+
 > 而使用这个脚本,会给gdb添加下面的两条命令:
-> nb 通过 offset 下断点
-> nx 通过 offset 看程序内存(注意只是 pie 程序本身的数据)
+> nb offset :通过 offset 下断点
+> nx offset :通过 offset 看程序内存(注意只是 pie 程序本身的数据)
+>    - nx offset 和 x/20wx (proc_base+offset) 或者 x/20gx (proc_base+offset) 的功能是一样的,只是 nx 可以自动找到 proc_base
 
 ---
 
 ### 小细节
-> nb 123  和 nb 0x123 作用是一样的,都是在 距离程序加载的基地址偏移 0x123 出下断点,同理 nx 123 和 nx 0x123 作用也是一样的
+> nb 123  和 nb 0x123 作用是一样的,都是在距离程序加载的基地址偏移 0x123 出下断点
+> 同理 nx 123 和 nx 0x123 作用也是一样的
 ---
 
  ### how to use
@@ -44,3 +50,6 @@ grammar_cjkRuby: true
 1. 在 gdb 中输入 "nx 2020C0" 或者 "nx 0x2020C0" 即可
 
 ![example_result_2](https://www.github.com/Byzero512/blog_img/raw/master/nw/1536585938107.png)
+
+### 写在最后的话
+> 脚本持续更新中
