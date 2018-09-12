@@ -39,10 +39,10 @@ description: 2018, kap0k to beginner
 
 ### 入门资料
 
-#### 最全面的新手教程
+#### 最全面的新手教程(招新比赛都是 linux pwn)
 > https://ctf-wiki.github.io/ctf-wiki/pwn/linux/stackoverflow/stack_intro/
-> 对应题目放在
->  https://github.com/ctf-wiki/ctfchallenges/tree/master/pwn/stackoverflow
+> 对应题目放在:
+> https://github.com/ctf-wiki/ctf-challenges/tree/master/pwn
 
 #### 前置
 
