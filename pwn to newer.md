@@ -40,7 +40,7 @@ description: 2018, kap0k to beginner
 ### 入门资料
 
 #### 最全面的新手教程
-> https://ctf-wiki.github.io/ctf-wiki/pwn/stackoverflow/stack_intro/
+> https://ctf-wiki.github.io/ctf-wiki/pwn/linux/stackoverflow/stack_intro/
 > 对应题目放在
 >  https://github.com/ctf-wiki/ctfchallenges/tree/master/pwn/stackoverflow
 
