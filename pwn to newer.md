@@ -51,6 +51,7 @@ description: 2018, kap0k to beginner
 > 函数调用: https://segmentfault.com/a/1190000007977460
 
 #### pwn 教程
+> 招新考察范围: shellcode, rop, 格式化字符串....
 1. rop
 > 来自bamboofox的视频教程
 > https://www.youtube.com/watch?v=QYmWq2o7MtA&t=3047s
@@ -63,7 +64,6 @@ description: 2018, kap0k to beginner
 > https://www.youtube.com/watch?v=FvGhDlK36PI&t=4s
 https://www.youtube.com/watch?v=oiicCDA4RNc
 https://www.youtube.com/watch?v=o3KXSayMvhw
-
 
 3. plt表和got表(了解函数重定位过程)
 > http://www.ifuryst.com/archives/Linux-PLT-GOT.html
