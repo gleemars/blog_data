@@ -69,6 +69,7 @@ https://www.youtube.com/watch?v=o3KXSayMvhw
 > http://www.ifuryst.com/archives/Linux-PLT-GOT.html
 
 ### 其他推荐
+
 1. angelboy的入门教程视频
 > https://www.youtube.com/channel/UC_PU5Tk6AkDnhQgl5gARObA?app=desktop
 
@@ -80,4 +81,12 @@ https://www.youtube.com/watch?v=o3KXSayMvhw
 在Download中下载protostar的镜像然后安装
 https://liveoverflow.com/binary_hacking/protostar/index.html
 
+### tips
+> 大一上学期会有一门课: 计算机概论, 大家认真听,认真学
+> 计概不是水课哦
 
+
+### 书籍推荐
+> 王爽 <<汇编语言>>
+> 程序员的自我修养
+> 加密与解密 (目前只有第三版,第四版估计进度时间出)
