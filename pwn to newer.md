@@ -18,7 +18,7 @@ description: 2018, kap0k to beginner
 > 熟悉一些linux基本命令
 
 3. ida (必备神器)
-> https://pwntools.readthedocs.io/en/stable/
+> 版权原因,谷歌搜一搜
 
 4. pwngdb(调试用)
 > https://github.com/scwuaptx/Pwngdb
@@ -57,6 +57,7 @@ description: 2018, kap0k to beginner
 > 对应题目会发到群里(见群文件---> rop基础题目 )
 
 2. 格式化字符串漏洞
+
 > 可以看https://ctf-wiki.github.io/ctf-wiki/pwn/stackoverflow/stack_intro/的教程
 > 也可以看以下视频:
 > https://www.youtube.com/watch?v=FvGhDlK36PI&t=4s
