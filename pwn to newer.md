@@ -17,7 +17,7 @@ description: 2018, kap0k to beginner
 2. linux(建议使用ubuntu16.04,可以使用vmware安装虚拟机)
 > 熟悉一些linux基本命令
 
-3. ida (必备神器)
+3. ida pro 7.0 (必备神器)
 > 版权原因,谷歌搜一搜
 
 4. pwngdb(调试用)
