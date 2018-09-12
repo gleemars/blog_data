@@ -45,6 +45,7 @@ description: 2018, kap0k to beginner
 >  https://github.com/ctf-wiki/ctfchallenges/tree/master/pwn/stackoverflow
 
 #### 前置
+
 > 在我们 pwn程序之前需要突破程序的保护,前提是我们要了解保护机制
 >http://yunnigu.dropsec.xyz/2016/10/08/checksec%E5%8F%8A%E5%85%B6%E5%8C%85%E5%90%AB%E7%9A%84%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6/
 
@@ -52,6 +53,8 @@ description: 2018, kap0k to beginner
 
 #### pwn 教程
 > 招新考察范围: shellcode, rop, 格式化字符串....
+> shellcode 的简单利用大家在 ctf-wiki 或者bamboofox 的视频里面可以学 
+
 1. rop
 > 来自bamboofox的视频教程
 > https://www.youtube.com/watch?v=QYmWq2o7MtA&t=3047s
