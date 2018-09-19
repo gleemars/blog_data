@@ -60,11 +60,13 @@ grammar_cjkRuby: true
 
 ### 全局变量声明
 
-1. const 常量声明
+#### const 常量声明
+
 > var_name  equ  var_value
 > such as: SIZE equ 1000;
 
-2. 有初始化的变量声明
+#### 有初始化的变量声明
+
 > 形式: var_name  dataType  var_value
 
 ![init_var_type_1](https://www.github.com/Byzero512/blog_img/raw/master/1537247003007.png)
@@ -78,7 +80,8 @@ grammar_cjkRuby: true
 
 ![define_init_var_example](https://www.github.com/Byzero512/blog_img/raw/master/1537246736243.png)
 
-3. 没有初始化的变量声明
+#### 没有初始化的变量声明
+
 > 形式: var_name resType count
 
 ![res_type](https://www.github.com/Byzero512/blog_img/raw/master/1537247141180.png)
@@ -87,9 +90,10 @@ grammar_cjkRuby: true
 
 ![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1537247177276.png)
 
-4. extern 变量声明
+#### extern 变量声明??????????????
 
 ### 数据单元的引用
+
 1. byte [var_name] ------- byte ptr [var_name]  //方括号其实可以省略
 2. word [var_name] ------- word ptr [var_name]
 3. dword [var_name] ------- dword ptr [var_name]
@@ -98,12 +102,14 @@ grammar_cjkRuby: true
 > mov al byte [var_name]
 
 ### 节
+
 > such as:
 > section .text
 > section .data
 > section .bss
 
 ### 简单的框架
+
 ```x86asm
 
 section .data
@@ -306,13 +312,14 @@ imul <dest>,<src>,<imm>
 
 举个简单地例子: 奇数求和
 
-1. before
+1. before use loop:
 
 ![sum_1](https://www.github.com/Byzero512/blog_img/raw/master/1537342992645.png)
 
-2. after
+2. use loop: 
 
 ![sum_2](https://www.github.com/Byzero512/blog_img/raw/master/1537343348265.png)
 
 
 ## addressing modes: 寻址方式
+> This chapter provides some basic information regarding addressing modes and the associated address manipulations on the x86-64 architecture
