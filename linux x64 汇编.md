@@ -56,9 +56,9 @@ grammar_cjkRuby: true
 
 ---
 
-## 变量语法
+## 符号语法
 
-### 全局变量声明
+### 符号声明
 
 #### const 常量声明
 
@@ -90,7 +90,17 @@ grammar_cjkRuby: true
 
 ![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1537247177276.png)
 
-#### extern 变量声明??????????????
+#### 函数声明
+> 函数声明应该在 .text 中
+```x86asm
+global <procName>
+<procName>:
+	;function body
+ret
+```
+
+#### extern 符号声明
+> 形式: extern \<symbolName>
 
 ### 数据单元的引用
 
@@ -348,6 +358,11 @@ mov rax,qword ptr [Var1];	rax=*Var1
 ```
 
 ## stack implementation
++ 汇编语言中其实本身并没有局部变量声明这个东西
+	+ 减小 rsp 来创建所谓的局部变量
+	+ 根据 rbp偏移 来访问所谓的局部变量
+> 在某些汇编器中,可以使用伪代码来创建所谓的局部变量
+
 > push
 > pop
 > use register rip and rbp
@@ -399,3 +414,76 @@ abs eax
 	+ linkage: 可以在程序不同的地方调用并且正确返回
 	+ argument transmission: 可以访问参数并且返回值
 
+### function declaration: 函数声明
+> 不能在函数声明中声明函数
+
+```x86asm
+global <procName>
+<procName>:
+	;function body
+ret
+```
+
+### Standard Calling Convention: 函数调用约定
+> 参数传递
+> 返回值
+> 系统调用参数
+
+#### 函数参数
+
+1. 整数或指针
+
+![function_arg](https://www.github.com/Byzero512/blog_img/raw/master/1537348017268.png)
+
+2. 浮点数
+> xmm0-xmm7
+
+#### 函数返回值
+> 根据大小使用 A 寄存器 或者 xmm0 寄存器
+
+#### 寄存器在函数调用时的作用
+
+![call_1](https://www.github.com/Byzero512/blog_img/raw/master/1537348351834.png)
+
+![call_2](https://www.github.com/Byzero512/blog_img/raw/master/1537348365400.png)
+
+> 一个调用约定的链接
+https://en.wikipedia.org/wiki/X86_calling_conventions#System_V_AMD64_ABI
+
+
+### invoke: 调用函数
+
+```x86asm
+push argument
+call <function>
+```
+
+### Red Zone
+> 当我们调用函数,保存了寄存器的状态后,会有一部分的区域给编译器进行局部变量的优化
+
+![red_zone](https://www.github.com/Byzero512/blog_img/raw/master/1537348712514.png)
+
+
+## 与操作系统的交互: syscall
+> 系统调用号: rax
+> 参数: rdi,rsi,rdx,rcx,r8,r9
+
+
+## external symbol: 外部符号引用
+>  In general, using global variables accessed across multiple files is considered poor programming practice and should be used sparingly (if at all)
+
+```x86asm
+extern <symbolName>
+```
+
+## 命令行参数
+> 操作系统负责命令行参数的解析或者读取
+> 命令行参数在运行 \_start 前, 根据调用约定被放进了对应的寄存器中,所以可以通过操作对应寄存器来处理命令行参数
+
+## buffer: 缓冲区
+> 在程序运行期间,由于访问 secondary storage 的开销远远大于访问 main memory,所以为了提高效率,需要限制访问 secondary storage 的次数.
+> 缓冲区是一个临时存储从二级存储设备获得的数据的内存段
+> 也可以是临时存储要输出到二级存储设备的数据的内存段
+
+### 浮点数指令
+> The text focuses on the x86-64 floating-point operations, which are not the same as th32-bit floating-point operatio
