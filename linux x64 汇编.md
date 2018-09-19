@@ -131,9 +131,10 @@ last:
 ## 指令语法
 
 ### 前置
-1. 两个操作数应该具有相同的大小
+> 在计算指令中,两个操作数必须具有相同的长度
 
 ### mov
+
 >  两个操作数不能同时为内存
 
 ``` x86asm
@@ -150,8 +151,7 @@ mov eax,100;
 mov rcx,-1;
 mov ecx,eax;//这一步之后rcx=0,但如果是 mov cx,ax 或者 mov cl,al,那么只有cx或者cl被改变
 ```
-
-
+---
 
 ### lea
 > 获得一个地址
@@ -166,7 +166,109 @@ lea rsi,dword [var];
 > 如: mov rax,byte[var1] 和 mov rax,word[var1]
 
 #### narrowing conversions
-
+> 控制好 src 的大小就可以了
 
 #### widening conversions
+1. unsigned conversions
+> movzx \<dest> \<src> , 会把高位置零
+> 但是不支持 movzx \<reg64>,\<op32> 这种转换,但是可以通过mov指令实现
+
+![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1537332829261.png)
+
+![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1537332854102.png)
+
+2. signed conversions
+> 由于符号的存在, 要把高位的数字都设置为符号位
+> movsx \<dest>,\<src>, 不支持32位到64位的转换
+> movsxd \<dest>,\<src>, 只由于32位到64位的有符号转换
+
+![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1537332880484.png)
+
+### 整数指令:加减乘除
+
+1. #### 加法
+
+> add 不检查 rflag 的 CF 
+> inc \<op> 加一
+> adc 检查进位的加法指令,一般用于大数字的加法
+
+2. #### 减法
+
+> sub
+> dec \<op> 减一
+> sbb
+
+3. #### 乘法
+
+> multiplying two n-bit values produces a 2n-bit result at most
+
++ unnsigned multiplication: mul
+> 操作数不能是立即数
+> mul \<op>, 根据 op 的大小,另一个数放在了 al,ax,eax,rax 中
+
+![example](https://www.github.com/Byzero512/blog_img/raw/master/1537336933113.png)
+
+![mul_result](https://www.github.com/Byzero512/blog_img/raw/master/1537336613629.png)
+
++ signed multiplication: imul
+> 如果自定义\<dest>,那么 dest 必须是 reg
+> For the multiple operand multiply instruction, byte operands are not supported
+> 程序员要根据op的大小选择对应的指令
+
+![instruction](https://www.github.com/Byzero512/blog_img/raw/master/1537337053189.png)
+``` x86asm
+imul <source>
+;same as mul,but the op is signed
+
+imul <dest>,<src/imm>
+;dest=dest*src/imm
+;A byte size destination operand is not supported
+
+imul <dest>,<src>,<imm>
+;dest=src*imm ,the <src> operand must be a register or memory location
+;A byte sized destination operand is not supported.
+```
+![imul_example](https://www.github.com/Byzero512/blog_img/raw/master/1537338289942.png)
+
+4. ####  除法
+>  dividend must be a larger size than the divisor
+> unsigned division: div \<op>
+> signed division: idiv \<op>
+
+![division_op](https://www.github.com/Byzero512/blog_img/raw/master/1537338694315.png)
+
+![division_layout](https://www.github.com/Byzero512/blog_img/raw/master/1537338735154.png)
+
+![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1537338821935.png)
+
+### 逻辑指令
+
+> 操作数要具有相同大小
+> and
+> or
+> xor
+> not 操作数不能是立即数
+
+### Shift Operations
+
+#### logical shift
+
+> The logical shift treats the operand as a sequence of bits rather than as a number.
+
+![logic_shfit](https://www.github.com/Byzero512/blog_img/raw/master/1537339666352.png)
+
+#### Arithmetic Shift
+> 算术左移不保留符号位,可以用作 乘2 的快速乘法,其实和shl意义一样
+> 算术右移可以看作是符号位的拓展
++ The arithmetic shift right is also a bitwise operation that shifts all the bits of its source register by the specified number of bits places the result into the destination register. 
++  For an arithmetic left shift, the  original leftmost bit (the sign bit) is replicated to fill in all the vacant positions.
+
+![shift_right](https://www.github.com/Byzero512/blog_img/raw/master/1537340351822.png)
+
+![sal_sar](https://www.github.com/Byzero512/blog_img/raw/master/1537340250733.png)
+
+#### roate operations shift
+> 旋转操作数
+
+![roate_shift](https://www.github.com/Byzero512/blog_img/raw/master/1537340852936.png)
 
