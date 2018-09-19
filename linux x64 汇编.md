@@ -10,9 +10,9 @@ grammar_cjkRuby: true
 
 ### 汇编器
 > 本文使用 ysam 汇编器
-> yasm -g dwarf2 -f elf64 example.asm -l example.lst
+> yasm -g dwarf2 -f elf64 example.asm -l example.lst -o output_file.o
 
-> nasm -g -f elf64 suorce.asm -l list_file -o output_file
+> nasm -g -f elf64 suorce.asm -l list_file -o output_file.o
 
 #### ysam的参数
 > -g dwarf2 在最后的obj文件中保留debug信息
@@ -346,3 +346,56 @@ mov rax,qword ptr [Var1];	rax=*Var1
 ;上述三条指令,由于访问的是变量,故机器码中存放的是变量地址,而不是变量的值
 ;但由于指令码不同,操作就不同.一个地址,一个根据地址取值,一个取值当成地址再取值
 ```
+
+## stack implementation
+> push
+> pop
+> use register rip and rbp
+
+## macros
+> 宏定义应该被放在 .data 和 .text 之前
+
+### single-line macros
+
+```x86asm
+%define Macro_name shl rax,2;
+
+%define Macro_name(x) shl x,2;
+
+```
+
+### multi-line macros
+
+#### define_format
+```x86asm
+%macro <name> <number of arguments>
+
+;body of macro
+
+%endmacro
+```
+
+#### example
+```x86asm
+;--------------define macro------------
+
+%macro abs 1
+	cmp %1,0            ;%1代表了第一个参数
+	jge %%done
+	neg %1
+	
+%%done:         ; 宏定义中的label前面必须有2个'%'
+%endmarco
+
+;-----------use macro----------
+mov eax,1
+abs eax
+
+```
+
+## Functions
+
++ 函数有两个特性
+	+ linkage: 可以在程序不同的地方调用并且正确返回
+	+ argument transmission: 可以访问参数并且返回值
+
