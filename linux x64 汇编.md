@@ -114,6 +114,8 @@ grammar_cjkRuby: true
 
 section .data
 bVar db 10;   bvar=10
+EXIT_SUCCESS equ 0
+SYS_exit que 60
 
 section .bss
 bVar_uninit resb 1; 声明1个byte的空间给变量 bVar_uninit
@@ -129,6 +131,9 @@ _start:
 ;终止程序其实不需要标签,即 last: 可以省略
 
 last:
+mov rax,SYS_exit
+mov rdi,SYS_SUCCESS
+syscall;	exit(0)
 
 <code here>
 
@@ -323,3 +328,21 @@ imul <dest>,<src>,<imm>
 
 ## addressing modes: 寻址方式
 > This chapter provides some basic information regarding addressing modes and the associated address manipulations on the x86-64 architecture
+
++ The basic addressing modes are:
+	+ 1. Register
+	+ 2. Immediate
+	+ 3. Memory
+
+### address and value
+
+```x86asm
+mov rax,Var1;	rax=&Var1
+
+mov rax,qword [Var1];	rax=Var1,其实这条指令的机器码中放的是Var1这个变量的地址,但是取的是值,而不是地址
+
+mov rax,qword ptr [Var1];	rax=*Var1
+
+;上述三条指令,由于访问的是变量,故机器码中存放的是变量地址,而不是变量的值
+;但由于指令码不同,操作就不同.一个地址,一个根据地址取值,一个取值当成地址再取值
+```
