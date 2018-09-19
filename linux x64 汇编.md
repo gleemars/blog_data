@@ -128,7 +128,7 @@ last:
 
 ```
 
-## 指令语法
+## 基本指令 I
 
 ### 前置
 > 在计算指令中,两个操作数必须具有相同的长度
@@ -173,16 +173,17 @@ lea rsi,dword [var];
 > movzx \<dest> \<src> , 会把高位置零
 > 但是不支持 movzx \<reg64>,\<op32> 这种转换,但是可以通过mov指令实现
 
-![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1537332829261.png)
+![unsigned_converrsion](https://www.github.com/Byzero512/blog_img/raw/master/1537332829261.png)
 
-![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1537332854102.png)
 
 2. signed conversions
 > 由于符号的存在, 要把高位的数字都设置为符号位
 > movsx \<dest>,\<src>, 不支持32位到64位的转换
 > movsxd \<dest>,\<src>, 只由于32位到64位的有符号转换
 
-![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1537332880484.png)
+![signed_conversion_1](https://www.github.com/Byzero512/blog_img/raw/master/1537342256544.png)
+
+![signed_conversion_2](https://www.github.com/Byzero512/blog_img/raw/master/1537342268713.png)
 
 ### 整数指令:加减乘除
 
@@ -272,3 +273,46 @@ imul <dest>,<src>,<imm>
 
 ![roate_shift](https://www.github.com/Byzero512/blog_img/raw/master/1537340852936.png)
 
+## 基本指令 II
+
+### label 定义标签
+
+![label_def](https://www.github.com/Byzero512/blog_img/raw/master/1537341502896.png)
+
+### jmp
+
+#### unconditional control innstructions: jmp,距离无限制跳转
+
+![uncon_jmp](https://www.github.com/Byzero512/blog_img/raw/master/1537341810033.png)
+
+#### conditional control instructions: 短转移,限制为 ±128 bytes
+
+> 需要两步:
+
+ 1. cmp 设置 rflag 的 psw
+
+![cmp](https://www.github.com/Byzero512/blog_img/raw/master/1537341910342.png)
+
+ 2. 执行相应的有条件jmp语句
+
+![jmp_conditional](https://www.github.com/Byzero512/blog_img/raw/master/1537341928610.png)
+
+### Iteration 迭代/循环: loop
+> 在汇编循环中,一般使用 rcx 作为 counter
+> loop \<label>, 下图左边和右边的意义一样
+> loop时,会判断 rcx==0,如果不成立,会执行跳转执行
+
+![loop_label](https://www.github.com/Byzero512/blog_img/raw/master/1537343163502.png)
+
+举个简单地例子: 奇数求和
+
+1. before
+
+![sum_1](https://www.github.com/Byzero512/blog_img/raw/master/1537342992645.png)
+
+2. after
+
+![sum_2](https://www.github.com/Byzero512/blog_img/raw/master/1537343348265.png)
+
+
+## addressing modes: 寻址方式
