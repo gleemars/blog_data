@@ -214,11 +214,17 @@ lea rsi,dword [var];
 > inc \<op> 加一
 > adc 检查进位的加法指令,一般用于大数字的加法
 
+![add_1](https://www.github.com/Byzero512/blog_img/raw/master/1537365975136.png)
+
+![adc_1](https://www.github.com/Byzero512/blog_img/raw/master/1537366001680.png)
+
 2. #### 减法
 
 > sub
 > dec \<op> 减一
 > sbb
+
+![sub_1](https://www.github.com/Byzero512/blog_img/raw/master/1537365940910.png)
 
 3. #### 乘法
 
@@ -262,6 +268,101 @@ imul <dest>,<src>,<imm>
 ![division_layout](https://www.github.com/Byzero512/blog_img/raw/master/1537338735154.png)
 
 ![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1537338821935.png)
+
+### 浮点数
+> The text focuses on the x86-64 floating-point operations, which are not the same as th32-bit floating-point operatio
+> 浮点数的运算指令中,两个操作数必须是同一类型
+
+#### xmm register: 浮点数寄存器
+> xmm0--xmm15
+> xmm寄存器在新的cpu中为 128 bytes 或者 256 bytes,
+> xmm寄存器不仅用于浮点数的处理,还可以用于对图像的处理,其实后者才是xmm寄存器的真正用途
+
+#### Data Movement: 浮点数的移动
+> movss \<dest>,\<src>, 对 float 的操作
+> movsd \<dest>,\<src>, 对 double 的操作
+
+![float_1](https://www.github.com/Byzero512/blog_img/raw/master/1537364909387.png)
+
+![float_2](https://www.github.com/Byzero512/blog_img/raw/master/1537364934560.png)
+
+#### Integer / Floating-Point Conversion Instructions: 整数/浮点数的转换
+
+> 如果整数需要参加浮点数的运算, 那么整数必须转换成浮点数
+
+![float_int_conversion_1](https://www.github.com/Byzero512/blog_img/raw/master/1537365324558.png)
+
+![float_int_converrsion_2](https://www.github.com/Byzero512/blog_img/raw/master/1537365300788.png)
+
+#### Floating-Point Arithmetic Instructions: 浮点数运算指令之加减乘除
+
+> 浮点数的运算指令中,两个操作数必须是同一类型
+> **\<dest> 必须是浮点数寄存器**
+> **\<src> 不能是立即数**
+
+1. ##### 加法
+
+> addss \<RXdest>,\<src>
+> addsd \<RXdest>,\<src>
+> **\<dest> 必须是浮点数寄存器**
+> **\<src> 不能是立即数**
+
+![add_float](https://www.github.com/Byzero512/blog_img/raw/master/1537366073136.png)
+
+2. ##### 减法
+
+> subss \<RXdest>,\<src>
+> subsd \<RXdest>,\<src>
+> **\<dest> 必须是浮点数寄存器**
+> **\<src> 不能是立即数**
+
+![sub_float](https://www.github.com/Byzero512/blog_img/raw/master/1537366577803.png)
+
+3. ##### 乘法
+
+> mulss \<RXdest>,\<src>
+> mulsd \<RXdest>,\<src>
+> **\<dest> 必须是浮点数寄存器**
+> **\<src> 不能是立即数**
+
+![mul_float](https://www.github.com/Byzero512/blog_img/raw/master/1537366894266.png)
+
+4. ##### 除法
+
+> divss \<RXdest>,\<src>
+> divsd \<RXdest>,\<src>
+> **\<dest> 必须是浮点数寄存器**
+> **\<src> 不能是立即数**
+
+![div_float](https://www.github.com/Byzero512/blog_img/raw/master/1537367018033.png)
+
+5. ##### 平方根
+
+> sqrtss \<RXdest>,\<src>
+> sqrtsd \<RXdest>,\<src>
+> **\<dest> 必须是浮点数寄存器**
+> **\<src> 不能是立即数**
+
+![sqrt_float_1](https://www.github.com/Byzero512/blog_img/raw/master/1537367149782.png)
+
+![sqrt_float_2](https://www.github.com/Byzero512/blog_img/raw/master/1537367169651.png)
+
+#### Floating-Point Comparison: 浮点数比较指令
+> ucomiss \<RXsrc>,\<src>
+> ucomisd \<RXsrc>,\<src>
+>  **\<RXsrc> 必须是浮点数寄存器**
+> **\<src> 不能是立即数**
+
+![cmp_float](https://www.github.com/Byzero512/blog_img/raw/master/1537367794787.png)
+
+![cmp_float_1](https://www.github.com/Byzero512/blog_img/raw/master/1537367876109.png)
+
+#### Floating-Point Control Instructions: 浮点数控制指令
+> Floating-Point Comparison
+> float-conditional-jmp
+
+#### Floating-Point Calling Conventions: 浮点数调用约定
+> xmm0--xmm7
 
 ### 逻辑指令
 
@@ -485,5 +586,79 @@ extern <symbolName>
 > 缓冲区是一个临时存储从二级存储设备获得的数据的内存段
 > 也可以是临时存储要输出到二级存储设备的数据的内存段
 
-### 浮点数指令
-> The text focuses on the x86-64 floating-point operations, which are not the same as th32-bit floating-point operatio
+---
+
+## Parallel Processing: 并行处理
++ 进程并行
+	1. 几个进程处在不同的 core 中: 真并行
+	2. 几个进程处在一个相同的 core 中: 通过算法和调度实现的假并行
+
+> 进程并行可能是多个进程完成多个任务,也可能是共同完成单个任务
+
+### 实现进程并行的方式
+> The basic approaches to parallel processing are distributed computing(分布式计算) and multiprocessing(also referred to as threaded computations)
+> 不管是哪种方法,都要实现共享内存多处理
+
+#### Distributed computing: 分布式计算
+
+> 分布式运算可以认为是把一个大问题分解成很多小问题, 分布式系统中每一个计算机都去处理一个小问题, 然后综合计算结果
+
+#### Multiprocessing: 多道处理
+> 现在计算机的CPU一般是多核的, 每一个 core 对内存资源都有相同的访问权限
+> A thread is often referred to as a light-weight process since it will use the initial process’s allocations and address space thus making it quicker to create. Since the threads share memory with the initial process and any other threads, this presents the potential for very fast communication between simultaneously executing threads.
+> 但是这种方法需要保证结果不被 corrupted, 即要注意 race condition
+> 其次,计算机的核数有限
+
+##### POSIX Threads
+> The POSIX Threads, commonly called pThreads, is a widely available thread library on Ubuntu and many other operating systems. 
+> Ideally, in order to maximize the overall parallel operations, the main process would perform other computations while the thread or threads are executing and only check for thread completion when the other work has been completed
+> 线程之间防止竞争,实现同步
+
+##### race condition: 条件竞争
+> 条件竞争指的是多个线程同时对同一个数据进行修改
+
+## Interrupts: 中断
+> Typically, the current process is interrupted so that some other work can be performed. An interrupt is usually defined as an event that alters the sequence of instructions executed by a processor. Such events correspond to signals generated by software and/or hardware. 
+
+
+> 中断有不同的类别和优先级
+> 中断是操作系统提高资源利用率的主要方式
+
+### 类别
+1. 软件中断和硬件中断
+> software interrupt
+> + Software programs can also generate interrupts to initiate I/O as needed, request OS services, or handle unexpected conditions.	
+
+> hardware interrupt
+> + Handling interrupts is a sensitive task. Interrupts can occur at any time, the kernel triesto get the interrupt addressed as soon as possible. 
+
+> Additionally, an interrupt can beinterrupted by another interrup
+> cpu在执行某些指令时是不能被中断的
+
+2. 同步中断和异步中断
+> Synchronous Interrupts: 同步中断
+> + 在CPU的控制下产生的中断或者由进程造成
+> + 同步中断的性质和中断产生的位置有关
+
+> Asynchronous Interrupts: 异步中断
+> + 任意时刻都可以发生,并且不能预测
+> + 可以使外部硬件导致的中断
+
+3. 可屏蔽中断和不可屏蔽中断
+> Maskable interrupts
+> + 可屏蔽中断表示中断可以延迟处理
+
+> Non-maskable interrupts
+> + 不可屏蔽中断表示中断必须马上处理,一般由CPU处理
+
+### interrupt Privilege Levels: 中断优先级
+> Privilege Levels refer to the privilege level at which the interrupt code executes
+> 
+
+### 中断处理
+1. 中断发生
+2. 挂起
+3.  Interrupt Service Routine: 中断处理例程
+4.  恢复
+
+
