@@ -23,6 +23,7 @@ grammar_cjkRuby: true
 	+ 通过相对地址转移
 	+ 通过绝对地址转移
 
+
 ## 8086
 
 ### jmp
@@ -46,30 +47,59 @@ jmp far ptr label; 机器码为: EA
 
 
 ## i386
-> 兼容前面的指令
 ### jmp
 ```x86asm
-;通过偏移地址进行转移
-jmp <offset_ime>; 机器码为: E9 <offset>; 长度为 5
 
-;和上面的指令一样
-jmp <offset> <imd>; 机器码为 E9 <offset>; 长度为 5
+;通过偏移进行转移,有短有近
 
-;通过绝对地址进行转移
-jmp <addr>; 机器码为: FF 25 <addr>; 长度为 6
+;短距离
+;机器码为 EB offset; 长度为 2, 即有 1byte 的机器码为 offset
 
+jmp label
+jmp short label
+jmp offset label/addr
+
+;==============================
+
+;近距离
+;机器码为: E9 offset; 长度为 5, 即有 4bytes 的机器码为 offset
+
+jmp label 
+jmp offset label/addr
+
+;================================
+
+;通过指针的地址进行转移
+;机器码为: FF 25 [label/addr]; 长度为 6 bytes, 有 4bytes 的为指针的地址
+
+jmp dword ptr ds:[label/addr]; 这四种情况的意思是: jmp *[label/addr]
+jmp dword ptr [label/addr]
+jmp ds:[label/addr];
+jmp [label/addr]; 
 ```
+> 上面的jmp情况中, 使用偏移远转移还是通过指针的地址进行转移, 应该由程序员写汇编是决定
+
+?????????????????????其实对于pie程序是如何定位的?????????
+
 ### call
 
 ```x86asm
-;通过偏移地址进行转移
-call <offset_ime>; 机器码为: E8 <offset>; 长度为 5
 
-;和上面的指令一样
-call <offset> <imd>; 机器码为 E8 <offset>; 长度为 5
+;偏移调用
+;机器码为 E8 offset, 机器码长度为 5
 
-;通过绝对地址进行转移
-call [addr]; 机器码为: FF 15 <addr>
+call label/addr
+call offset label/addr
+
+;=======================
+
+; 通过指针的绝对地址调用
+; 机器码为: FF 15 [label/addr], 机器码长度为 6
+
+call dword ptr ds:[label/addr]; 这四种情况都是 call *[label/addr]
+call dword ptr [label/addr]
+call ds:[label/addr]
+call [label/addr]
 ```
 
 
@@ -78,27 +108,47 @@ call [addr]; 机器码为: FF 15 <addr>
 
 ### jmp
 ```x86asm
-;通过偏移地址进行转移
-jmp <offset_imd>; 机器码为: E9 offset; 长度为 5
 
-;和上面的指令一样
-jmp <offset> <imd>; 机器码为 E9 <offset>; 长度为 5
+;短距离
+;机器码为 EB offset; 长度为 2, 即有 1byte 的机器码为 offset
 
-;64位jmp语句由于指令长度限制,只能现将绝对地址放入寄存器中,再转移
+jmp label
+jmp short label
+jmp offset label/addr
+
+;=========================
+
+;近距离
+;机器码为: E9 offset; 长度为 5, 即有 4bytes 的机器码为 offset
+
+jmp label 
+jmp offset label/addr
+
+;==========================
+
+;64位jmp语句由于指令长度限制,只能先将绝对地址放入寄存器中,再转移
 ;通过寄存器存放的绝对地址进行转移
 jmp <reg>; 机器码为 FF <reg>; 长度为 2
+
+;===========================
+;远转移是怎么回事?
+;????????????????????????????????????????
+;????????????????????????????????????????
+
 ```
 
 ### call
+> 远调用和32位的不同,主要是指令机器码的长度限制
 ```x86asm
-;通过偏移地址进行转移
-call <offset_ime>; 机器码为: E8 <offset>; 长度为 5
 
-;和上面的指令一样
-call <offset> <imd>; 机器码为 E8 <offset>; 长度为 5
+;偏移调用
+;机器码为 E8 offset, 机器码长度为 5
 
-;64位jmp语句由于指令长度限制,只能现将绝对地址放入寄存器中,再转移
-;通过寄存器存放的绝对地址进行转移
-call <reg>; 机器码为: FF <addr>; 长度为 2
+call label/addr
+call offset label/addr
+
+;远调用
+lea rbx,[label/addr]
+jmp rbx
 
 ```
