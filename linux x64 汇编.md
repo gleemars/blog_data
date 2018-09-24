@@ -125,7 +125,7 @@ ret
 section .data
 bVar db 10;   bvar=10
 EXIT_SUCCESS equ 0
-SYS_exit que 60
+SYS_exit equ 60
 
 section .bss
 bVar_uninit resb 1; 声明1个byte的空间给变量 bVar_uninit
@@ -451,11 +451,9 @@ imul <dest>,<src>,<imm>
 mov rax,Var1;	rax=&Var1
 
 mov rax,qword [Var1];	rax=Var1,其实这条指令的机器码中放的是Var1这个变量的地址,但是取的是值,而不是地址
-
-mov rax,qword ptr [Var1];	rax=*Var1
+mov rax,qword ptr [Var1]; 和上面的指令意义一样,在写汇编时,应该用上一种方式,这种方式一般是在反汇编时才能看到,不能这么写(反正我用下面这种方法,汇编器说这是个语法错误)
 
 ;上述三条指令,由于访问的是变量,故机器码中存放的是变量地址,而不是变量的值
-;但由于指令码不同,操作就不同.一个地址,一个根据地址取值,一个取值当成地址再取值
 ```
 
 ## stack implementation
