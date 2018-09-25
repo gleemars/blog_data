@@ -1,7 +1,7 @@
 ---
 title: linux x64 汇编
-description: 
-categories:
+description: 这篇文章是读<x64 Assembly Language Programming with Ubuntu>的读书笔记,简单地记录了一些x64汇编指令,包括浮点数指令.
+categories: asm
 tags: 
 grammar_cjkRuby: true
 ---
