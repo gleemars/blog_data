@@ -133,7 +133,7 @@ bVar_uninit resb 1; 声明1个byte的空间给变量 bVar_uninit
 
 section .text
 
-;如果要使用标准的系统连接器,那么程序入口点应该这样子声明:
+;如果要使用标准的系统链接器,那么程序入口点应该这样子声明:
 global _start 
 _start:          
 
