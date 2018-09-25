@@ -63,7 +63,7 @@ grammar_cjkRuby: true
 #### const 常量声明
 
 > var_name  equ  var_value
-> such as: SIZE equ 1000;
+> such as: SIZE equ 1000
 
 #### 有初始化的变量声明
 
