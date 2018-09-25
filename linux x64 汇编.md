@@ -154,6 +154,7 @@ syscall;	exit(0)
 
 ### 前置
 > 在计算指令中,两个操作数必须具有相同的长度
+> 汇编中,整体上来说只有两种指令: 与整数有关的指令,与浮点数有关的指令
 
 ### mov
 
@@ -184,7 +185,7 @@ lea rsi,dword [var];
 ```
 
 ### 类型转换
-> 在汇编语言中可以通过改变要操作的操作数的大小类实现类型转换
+> 在汇编语言中可以通过改变要操作的操作数的大小来实现类型转换
 > 如: mov rax,byte[var1] 和 mov rax,word[var1]
 
 #### narrowing conversions
@@ -240,7 +241,7 @@ lea rsi,dword [var];
 ![mul_result](https://www.github.com/Byzero512/blog_img/raw/master/1537336613629.png)
 
 + signed multiplication: imul
-> 如果自定义\<dest>,那么 dest 必须是 reg
+> 如果自定义\<dest>,那么 \<dest> 必须是 \<reg>
 > For the multiple operand multiply instruction, byte operands are not supported
 > 程序员要根据op的大小选择对应的指令
 
