@@ -1,9 +1,11 @@
 ---
 title: python中的struct模块
-description: 
+description: 本文主要记录了python的用来pack与unpack的模块: struct
+author: byzero(or named Byzero512)
 categories:
+- python
 tags: 
-grammar_cjkRuby: true
+- python
 ---
 
 ### struct模块
