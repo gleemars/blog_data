@@ -13,7 +13,7 @@ tags:
 ## Preface
 
 ### 汇编器
-> 本文使用 ysam 汇编器
+> 本文使用 ysam 汇编器或者 nasm 汇编器
 > yasm -g dwarf2 -f elf64 example.asm -l example.lst -o output_file.o
 
 > nasm -g -f elf64 suorce.asm -l list_file -o output_file.o
