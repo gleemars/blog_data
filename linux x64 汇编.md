@@ -109,7 +109,7 @@ ret
 ### 数据单元的引用
 > 在写汇编时,用前面的写法,后面的写法汇编器编译时会认为是个语法错误 (但是反汇编时,又一般以后面的写法表示)
 
-1. byte [var_name] ------- byte ptr [var_name]  //方括号其实可以省略
+1. byte [var_name] ------- byte ptr [var_name]  
 2. word [var_name] ------- word ptr [var_name]
 3. dword [var_name] ------- dword ptr [var_name]
 4. qword [var_name] ------- qword ptr [var_name]
