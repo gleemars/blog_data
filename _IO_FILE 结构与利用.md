@@ -26,8 +26,8 @@ struct _IO_FILE {
   char* _IO_read_ptr;	/* Current read pointer */
   char* _IO_read_end;	/* End of get area. */
   char* _IO_read_base;	/* Start of putback+get area. */
-  char* _IO_write_base;	/* Start of put area. */
-  char* _IO_write_ptr;	/* Current put pointer. */
+  char* _IO_write_base;	/* Start of put area. */                   //0x20 0x18
+  char* _IO_write_ptr;	/* Current put pointer. */                 //0x28  0x1c
   char* _IO_write_end;	/* End of put area. */
   char* _IO_buf_base;	/* Start of reserve area. */
   char* _IO_buf_end;	/* End of reserve area. */
@@ -39,7 +39,25 @@ struct _IO_FILE {
   struct _IO_marker *_markers;
 
   struct _IO_FILE *_chain;
-//省略了一些成员
+
+  int _fileno;
+#if 0
+  int _blksize;
+#else
+  int _flags2;
+#endif
+  _IO_off_t _old_offset; /* This used to be _offset but it's too small.  *///14
+
+#define __HAVE_COLUMN /* temporary */
+  /* 1+column number of pbase(); 0 is unknown. */
+  unsigned short _cur_column;
+  signed char _vtable_offset;
+  char _shortbuf[1];//0x88 do what?
+
+  /*  char* _save_gptr;  char* _save_egptr; */
+
+  _IO_lock_t *_lock;
+#ifdef _IO_USE_OLD_IO_FILE
 };
 
 
@@ -80,8 +98,35 @@ struct _IO_jump_t
 };
 
 ```
+3. \_IO_FILE_complete
+```cpp
+struct _IO_FILE_complete
+{
+  struct _IO_FILE _file;
+#endif
+#if defined _G_IO_IO_FILE_VERSION && _G_IO_IO_FILE_VERSION == 0x20001
+  _IO_off64_t _offset;
+# if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
+  /* Wide character stream stuff.  */
+  struct _IO_codecvt *_codecvt;
+  struct _IO_wide_data *_wide_data;
+  struct _IO_FILE *_freeres_list;
+  void *_freeres_buf;
+# else
+  void *__pad1;
+  void *__pad2;
+  void *__pad3;
+  void *__pad4;
+# endif
+  size_t __pad5;
+  int _mode;                                                   //这个是打开模式
+  /* Make sure we don't get into trouble again.  */
+  char _unused2[15 * sizeof (int) - 4 * sizeof (void *) - sizeof (size_t)];
+#endif
+};
+```
 
-3.  \_IO_FILE_plus
+4.  \_IO_FILE_plus
 > 封装了上面两个结构
 
 ```cpp
@@ -133,12 +178,46 @@ struct _IO_FILE_plus
 
 ## 利用
 > 库函数堆文件进行操作,需要通过堆上的FILE结构体(进一步得通过vtable)来对文件进行操作, 这样子就为攻击提供了前提 
->  调用IO_FILE函数时, 函数的第一个参数都是一个指向_IO_FILE_pllus 的指针, 所以需要向\_IO_FILE_plus的起始处写入"/bin/sh\x00"
+>  调用vtable中的函数指针指向的函数时, 函数的第一个参数都是一个指向_IO_FILE_pllus 的指针, 所以需要向\_IO_FILE_plus的起始处写入"/bin/sh\x00"
 
 
 ### 利用方式
 > 1. exploit vtable
 
+### fake \_IO_FILE_plus
+1. 成员偏移
+```cpp
+0x0   _flags
+0x8   _IO_read_ptr
+0x10  _IO_read_end
+0x18  _IO_read_base
+0x20  _IO_write_base
+0x28  _IO_write_ptr
+0x30  _IO_write_end
+0x38  _IO_buf_base
+0x40  _IO_buf_end
+0x48  _IO_save_base
+0x50  _IO_backup_base
+0x58  _IO_save_end
+0x60  _markers
+0x68  _chain
+0x70  _fileno
+0x74  _flags2
+0x78  _old_offset
+0x80  _cur_column
+0x82  _vtable_offset
+0x83  _shortbuf
+0x88  _lock
+0x90  _offset
+0x98  _codecvt
+0xa0  _wide_data
+0xa8  _freeres_list
+0xb0  _freeres_buf
+0xb8  __pad5
+0xc0  _mode
+0xc4  _unused2
+0xd8  vtable
+```
 ### vtable
 + 有两种: 
 	+ 修改vtable中的函数指针: 
@@ -183,3 +262,20 @@ fake_file += p64(fake_lock_addr)
 fake_file = fake_file.ljust(0xd8, '\x00')
 fake_file += p64(buf_addr + 0x10 - 0x88) # fake_vtable_addr
 ```
+
+### FSOP
+> 通过覆盖 IO_list_all, 使其指向伪造的 \_IO_FILE_plus, 并且该\_IO_FILE_plus中的指针vtable指向伪造的vtable
+> 然后通过close()、exit(0)、abort，使程序或者文件关闭,程序或者文件关闭时,需要刷新缓存,此时会调用vtable中的__overflow
+> 再基于 fake vtable 的攻击就可以将 调用__overflow() --> system('/bin/sh\x00')
+
+#### 攻击前提
+> leak libc
+> 任意写
+> 在伪造 IO_FILE_plus时:
+		+ fp->\_mode <= 0
+		+ fp->\_IO_write_ptr > fp->\_IO_write_base
+
+#### 利用流程
+> fake IO_FILE_plus, fkae vtable(change {vtable->\_\_overflow} --> system)
+> 覆盖_IO_list_all,使其指向伪造的 IO_FILE_plus
+> 使程序exit或者abort
