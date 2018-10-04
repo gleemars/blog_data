@@ -24,22 +24,25 @@ struct _IO_FILE {
   /* The following pointers correspond to the C++ streambuf protocol. */
   /* Note:  Tk uses the _IO_read_ptr and _IO_read_end fields directly. */
   
-  //===================================================
-  //记录读操作发生的区域: [ _IO_read_ptr : _IO_read_end ]
-  //===================================================
+  /*===================================================
+  记录读操作发生的区域: [ _IO_read_base : _IO_read_ptr ]
+  ===================================================*/
   char* _IO_read_ptr;	/* Current read pointer */                //0x10 0x8
-  char* _IO_read_end;	/* End of get area. */                  
+  char* _IO_read_end;	/* End of get area. */                     //标记文件内容在缓冲区的区域: [ _IO_buf_base : _IO_read_end ]
   char* _IO_read_base;	/* Start of putback+get area. */       
   
-  //===================================================
-  //记录写操作发生的区域: [ _IO_write_ptr : _IO_write_end ]
-  //===================================================
+  /*===================================================
+  记录写操作发生的区域: [ _IO_write_base : _IO_write_ptr ]
+  ===================================================*/
   char* _IO_write_base;	/* Start of put area. */                   //0x20 0x18
   char* _IO_write_ptr;	/* Current put pointer. */                 //0x28  0x1c
   char* _IO_write_end;	/* End of put area. */
   
-  char* _IO_buf_base;	/* Start of reserve area. */           //文件缓冲区的基址
-  char* _IO_buf_end;	/* End of reserve area. */             //文件缓冲区的结束地址加1
+  /*===================================================
+  记录文件的缓冲区位置: [ _IO_buf_base : _IO_buf_end ]
+  ===================================================*/
+  char* _IO_buf_base;	/* Start of reserve area. */           
+  char* _IO_buf_end;	/* End of reserve area. */             
   /* The following fields are used to support backing up and undo. */
   
   char *_IO_save_base; /* Pointer to start of non-current get area. */
