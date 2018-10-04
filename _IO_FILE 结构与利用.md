@@ -7,10 +7,10 @@ grammar_cjkRuby: true
 ---
 
 ### 前置
-1. 打开一个文件时,会在堆上创建一个_IO_FILE_plus结构,并返回一个FILE类型指针
+1. 打开一个文件时,会在堆上创建一个 locked_FILE 结构,并返回一个FILE类型指针
 
 ### \_IO_list_all
-> 一个记录了所有 \_IO_FILE_plus 结构的单向链表
+> 一个记录了所有 \_IO_FILE_plus 结构的单向链表的链表头,储存在libc中
 
 ### FILE
 1. \_IO_FILE
@@ -59,8 +59,6 @@ struct _IO_FILE {
   _IO_lock_t *_lock;
 #ifdef _IO_USE_OLD_IO_FILE
 };
-
-
 ```
 
 2. IO_jump_t
@@ -127,13 +125,56 @@ struct _IO_FILE_complete
 ```
 
 4.  \_IO_FILE_plus
-> 封装了上面两个结构
+> 封装了上面的结构
 
 ```cpp
 struct _IO_FILE_plus
 {
   _IO_FILE file;
   const struct _IO_jump_t *vtable; // 64位偏移为 0xd8, 32位下偏移为0x94
+};
+```
+
+5. \_IO_wide_data
+```cpp
+struct _IO_wide_data
+{
+wchar_t *_IO_read_ptr; /* Current read pointer */
+wchar_t *_IO_read_end; /* End of get area. */
+wchar_t *_IO_read_base; /* Start of putback+get area. */
+wchar_t *_IO_write_base; /* Start of put area. */
+wchar_t *_IO_write_ptr; /* Current put pointer. */
+wchar_t *_IO_write_end; /* End of put area. */
+wchar_t *_IO_buf_base; /* Start of reserve area. */
+wchar_t *_IO_buf_end; /* End of reserve area. */
+/* The following fields are used to support backing up and und
+o. */
+wchar_t *_IO_save_base; /* Pointer to start of non-current
+get area. */
+wchar_t *_IO_backup_base; /* Pointer to first valid charact
+er of
+backup area */
+wchar_t *_IO_save_end; /* Pointer to end of non-current get
+area. */
+__mbstate_t _IO_state;
+__mbstate_t _IO_last_state;
+struct _IO_codecvt _codecvt;
+wchar_t _shortbuf[1];
+const struct _IO_jump_t *_wide_vtable;
+};
+```
+
+6. locked_FILE
+> 实际上在堆上的是这个结构体
+> struct locked_FILE \*new_f = (struct locked_FILE \*) malloc (sizeof (structt locked_FILE));
+```cpp
+struct locked_FILE
+{
+struct _IO_FILE_plus fp;
+#ifdef _IO_MTSAFE_IO
+_IO_lock_t lock;           
+#endif
+struct _IO_wide_data wd;
 };
 ```
 
@@ -179,7 +220,6 @@ struct _IO_FILE_plus
 ## 利用
 > 库函数堆文件进行操作,需要通过堆上的FILE结构体(进一步得通过vtable)来对文件进行操作, 这样子就为攻击提供了前提 
 >  调用vtable中的函数指针指向的函数时, 函数的第一个参数都是一个指向_IO_FILE_pllus 的指针, 所以需要向\_IO_FILE_plus的起始处写入"/bin/sh\x00"
-
 
 ### 利用方式
 > 1. exploit vtable
@@ -244,6 +284,8 @@ struct _IO_FILE_plus
 	1. 能控制_IO_FILE_plus的起始位置
 	2. 能控制_IO_FILE_plus的指针成员vtable,使其指向位置的vtable
 	3. 能在某段内存位置vtable
++ 局限性
+	1. 从libc2.24开始就不能用了
 
 ##### 利用模板
 > vtable: 64位偏移为0xd8, 32位下偏移为0x94
@@ -278,4 +320,9 @@ fake_file += p64(buf_addr + 0x10 - 0x88) # fake_vtable_addr
 #### 利用流程
 > fake IO_FILE_plus, fkae vtable(change {vtable->\_\_overflow} --> system)
 > 覆盖_IO_list_all,使其指向伪造的 IO_FILE_plus
-> 使程序exit或者abort
+> 程序执行完成,exit,abort
+
+
+### 总结
+> 1. 改vtable中的函数指针从 glibc 2.23 开始不能用了, 于是转向了伪造整个vtable
+> 2. 伪造整个vtable从 glibc 2.24 开始不能用了, 于是转向了 \_IO_FILE_plus 中的 IO_FILE 结构体, 控制里面的一些读写指针
