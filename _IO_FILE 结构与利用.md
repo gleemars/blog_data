@@ -23,15 +23,24 @@ struct _IO_FILE {
 
   /* The following pointers correspond to the C++ streambuf protocol. */
   /* Note:  Tk uses the _IO_read_ptr and _IO_read_end fields directly. */
-  char* _IO_read_ptr;	/* Current read pointer */
-  char* _IO_read_end;	/* End of get area. */
-  char* _IO_read_base;	/* Start of putback+get area. */
+  
+  //===================================================
+  //记录读操作发生的区域: [ _IO_read_ptr : _IO_read_end ]
+  //===================================================
+  char* _IO_read_ptr;	/* Current read pointer */                //0x10 0x8
+  char* _IO_read_end;	/* End of get area. */                  
+  char* _IO_read_base;	/* Start of putback+get area. */       
+  
+  //===================================================
+  //记录写操作发生的区域: [ _IO_write_ptr : _IO_write_end ]
   char* _IO_write_base;	/* Start of put area. */                   //0x20 0x18
   char* _IO_write_ptr;	/* Current put pointer. */                 //0x28  0x1c
   char* _IO_write_end;	/* End of put area. */
-  char* _IO_buf_base;	/* Start of reserve area. */
-  char* _IO_buf_end;	/* End of reserve area. */
+  
+  char* _IO_buf_base;	/* Start of reserve area. */           //文件缓冲区的基址
+  char* _IO_buf_end;	/* End of reserve area. */             //文件缓冲区的结束地址加1
   /* The following fields are used to support backing up and undo. */
+  
   char *_IO_save_base; /* Pointer to start of non-current get area. */
   char *_IO_backup_base;  /* Pointer to first valid character of backup area */
   char *_IO_save_end; /* Pointer to end of non-current get area. */
@@ -40,7 +49,7 @@ struct _IO_FILE {
 
   struct _IO_FILE *_chain;
 
-  int _fileno;
+  int _fileno;                               //文件描述符, 唯一修改这个来伪造stdin,stdout
 #if 0
   int _blksize;
 #else
@@ -142,9 +151,11 @@ struct _IO_wide_data
 wchar_t *_IO_read_ptr; /* Current read pointer */
 wchar_t *_IO_read_end; /* End of get area. */
 wchar_t *_IO_read_base; /* Start of putback+get area. */
+
 wchar_t *_IO_write_base; /* Start of put area. */
 wchar_t *_IO_write_ptr; /* Current put pointer. */
 wchar_t *_IO_write_end; /* End of put area. */
+
 wchar_t *_IO_buf_base; /* Start of reserve area. */
 wchar_t *_IO_buf_end; /* End of reserve area. */
 /* The following fields are used to support backing up and und
@@ -241,23 +252,23 @@ struct _IO_wide_data wd;
 0x50  _IO_backup_base
 0x58  _IO_save_end
 0x60  _markers
-0x68  _chain
-0x70  _fileno
+0x68  **_chain**
+0x70  **_fileno**
 0x74  _flags2
 0x78  _old_offset
 0x80  _cur_column
 0x82  _vtable_offset
 0x83  _shortbuf
-0x88  _lock
+0x88  **_lock**
 0x90  _offset
 0x98  _codecvt
 0xa0  _wide_data
 0xa8  _freeres_list
 0xb0  _freeres_buf
 0xb8  __pad5
-0xc0  _mode
+0xc0  **_mode**
 0xc4  _unused2
-0xd8  vtable
+0xd8  **vtable**
 ```
 ### vtable
 + 有两种: 
@@ -286,7 +297,7 @@ struct _IO_wide_data wd;
 	2. 能控制_IO_FILE_plus的指针成员vtable,使其指向位置的vtable
 	3. 能在某段内存位置vtable
 + 局限性
-	1. 从libc2.24开始就不能用了
+	1. 从libc2.24开始,由于新增加了对vtable的检查,伪造vtable就不能用了
 
 ##### 利用模板
 > vtable: 64位偏移为0xd8, 32位下偏移为0x94
@@ -303,7 +314,7 @@ fake_file += p64(system) + '\x00' * 0x70
 ------------------the system can also be placed in other memory
 fake_file += p64(fake_lock_addr)
 fake_file = fake_file.ljust(0xd8, '\x00')
-fake_file += p64(buf_addr + 0x10 - 0x88) # fake_vtable_addr
+fake_file += p64(buf_addr + 0x10 - 0x88)        # fake_vtable_addr
 ```
 
 ### FSOP
@@ -322,6 +333,16 @@ fake_file += p64(buf_addr + 0x10 - 0x88) # fake_vtable_addr
 > fake IO_FILE_plus, fkae vtable(change {vtable->\_\_overflow} --> system)
 > 覆盖_IO_list_all,使其指向伪造的 IO_FILE_plus
 > 程序执行完成,exit,abort
+
+### \_IO_FILE结构体攻击: make FILE structure great again
+> \_IO_FILE结构体中, 有_IO_buf_base这些指针
+> 改变这些指针以达到任意读任意写的目的
+
+#### 任意写
+![arbitrary_write](https://www.github.com/Byzero512/blog_img/raw/master/1538660920987.png)
+
+#### 任意读
+![arbitrary_read](https://www.github.com/Byzero512/blog_img/raw/master/1538660996822.png)
 
 
 ### 总结
