@@ -180,6 +180,7 @@ struct _IO_wide_data wd;
 
 ## 文件IO操作
 > 从IO库函数 --> FILE文件结构 --> 文件结构vtable中对应的函数 --> 系统调用
+> 所有的文件IO操作, 第一个参数都是一个指向_IO_FILE_plus的指针
 
 ### 打开与关闭文件
 #### fopen()
