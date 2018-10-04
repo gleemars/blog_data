@@ -33,6 +33,7 @@ struct _IO_FILE {
   
   //===================================================
   //记录写操作发生的区域: [ _IO_write_ptr : _IO_write_end ]
+  //===================================================
   char* _IO_write_base;	/* Start of put area. */                   //0x20 0x18
   char* _IO_write_ptr;	/* Current put pointer. */                 //0x28  0x1c
   char* _IO_write_end;	/* End of put area. */
