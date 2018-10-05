@@ -242,6 +242,7 @@ struct _IO_wide_data wd;
 > 2. exploit \_IO_FILE_plus
 
 ### fake \_IO_FILE_plus
+
 1. 成员偏移
 ```cpp
 0x0   _flags
@@ -343,6 +344,9 @@ fake_file += p64(buf_addr + 0x10 - 0x88)        # fake_vtable_addr
 > \_IO_FILE结构体中, 有_IO_buf_base这些指针
 > 改变这些指针以达到任意读任意写的目的
 
+#### 利用前提
+> 能 leak flags的值
+
 #### 任意读
 ![arbitrary_write](https://www.github.com/Byzero512/blog_img/raw/master/1538660920987.png)
 > 把 \[ leak_target_startAdr : \_IO_write_base ] 的内容输出到 stdout
@@ -375,6 +379,42 @@ _IO_buf_end=write_target_endAdr
 fileno=0
 ```
 ![write_example](https://www.github.com/Byzero512/blog_img/raw/master/1538734057768.png)
+
+#### \_IO_FILE_plus 成员偏移
+
+1. 成员偏移
+```cpp
+0x0   _flags
+0x8   _IO_read_ptr
+0x10  _IO_read_end
+0x18  _IO_read_base
+0x20  _IO_write_base
+0x28  _IO_write_ptr
+0x30  _IO_write_end
+0x38  _IO_buf_base
+0x40  _IO_buf_end
+0x48  _IO_save_base
+0x50  _IO_backup_base
+0x58  _IO_save_end
+0x60  _markers
+0x68  **_chain**
+0x70  **_fileno**
+0x74  _flags2
+0x78  _old_offset
+0x80  _cur_column
+0x82  _vtable_offset
+0x83  _shortbuf
+0x88  **_lock**
+0x90  _offset
+0x98  _codecvt
+0xa0  _wide_data
+0xa8  _freeres_list
+0xb0  _freeres_buf
+0xb8  __pad5
+0xc0  **_mode**
+0xc4  _unused2
+0xd8  **vtable**
+```
 
 ### 总结
 > 1. 改vtable中的函数指针从 glibc 2.23 开始不能用了, 于是转向了伪造整个vtable
