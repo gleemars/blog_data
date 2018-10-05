@@ -239,6 +239,7 @@ struct _IO_wide_data wd;
 
 ### 利用方式
 > 1. exploit vtable
+> 2. exploit \_IO_FILE_plus
 
 ### fake \_IO_FILE_plus
 1. 成员偏移
@@ -342,12 +343,38 @@ fake_file += p64(buf_addr + 0x10 - 0x88)        # fake_vtable_addr
 > \_IO_FILE结构体中, 有_IO_buf_base这些指针
 > 改变这些指针以达到任意读任意写的目的
 
-#### 任意写
-![arbitrary_write](https://www.github.com/Byzero512/blog_img/raw/master/1538660920987.png)
-
 #### 任意读
+![arbitrary_write](https://www.github.com/Byzero512/blog_img/raw/master/1538660920987.png)
+> 把 \[ leak_target_startAdr : \_IO_write_base ] 的内容输出到 stdout
+
+```cpp
+_flags=_flags&~8
+_flags=_flags|0x800
+_IO_write_base=leak_target_startAdr
+_IO_write_ptr=leak_target_endAdr
+_IO_read_end=_IO_write_base
+fileno=1
+```
+![read_example](https://www.github.com/Byzero512/blog_img/raw/master/1538733991226.png)
+
+> 这样子就把本来输出到文件的内容输出到了 stdout
+
+---
+
+#### 任意写
 ![arbitrary_read](https://www.github.com/Byzero512/blog_img/raw/master/1538660996822.png)
 
+> 改变buffer的地址为 \[ write_target_startAdr : write_target_endAdr ]
+> 改变fileno为 stdin
+> 这样子从 stdin 读的内容就会储存在 \[ write_target_startAdr : write_target_endAdr ]中
+
+```cpp
+flags=flags&~4
+_IO_buf_base=write_target_startAdr
+_IO_buf_end=write_target_endAdr
+fileno=0
+```
+![write_example](https://www.github.com/Byzero512/blog_img/raw/master/1538734057768.png)
 
 ### 总结
 > 1. 改vtable中的函数指针从 glibc 2.23 开始不能用了, 于是转向了伪造整个vtable
