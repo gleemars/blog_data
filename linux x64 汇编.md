@@ -574,7 +574,7 @@ call <function>
 > 参数: rdi,rsi,rdx,rcx,r8,r9
 
 ### open
-
+> 注意是八进制
 1. flags
 
 ![open_flags](https://www.github.com/Byzero512/blog_img/raw/master/1539011953891.png)
