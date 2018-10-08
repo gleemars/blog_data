@@ -577,11 +577,11 @@ call <function>
 
 1. flags
 
-![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1539011953891.png)
+![open_flags](https://www.github.com/Byzero512/blog_img/raw/master/1539011953891.png)
 
 2. mode
 
-![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1539011971702.png)
+![new_file_if_create_mode](https://www.github.com/Byzero512/blog_img/raw/master/1539011971702.png)
 
 ## external symbol: 外部符号引用
 >  In general, using global variables accessed across multiple files is considered poor programming practice and should be used sparingly (if at all)
