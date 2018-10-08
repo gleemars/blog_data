@@ -573,6 +573,15 @@ call <function>
 > 系统调用号: rax
 > 参数: rdi,rsi,rdx,rcx,r8,r9
 
+### open
+
+1. flags
+
+![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1539011953891.png)
+
+2. mode
+
+![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1539011971702.png)
 
 ## external symbol: 外部符号引用
 >  In general, using global variables accessed across multiple files is considered poor programming practice and should be used sparingly (if at all)
