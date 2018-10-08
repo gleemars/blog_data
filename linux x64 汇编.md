@@ -574,6 +574,7 @@ call <function>
 > 参数: rdi,rsi,rdx,rcx,r8,r9
 
 ### open
+> 返回值是 int
 > 注意是八进制
 1. flags
 
