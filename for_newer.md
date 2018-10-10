@@ -97,15 +97,37 @@ CPU-寄存器
 ----
 
 
-#### 汇编前置
-```
-section .bss
+#### 汇编前置-声明变量
+```cpp
+#include<iostream>
+using namespace std;
+char char_data=1;
+int int_data=1;
+int int_array_data[3]={1,1,1};
+char char_bss;
+int int_bss;
+int int_array_bss[3];
 
+int main(){}
+```
+```x86asm
 section .data
+char_data db 1
+int_data dd 1
+int_array_data dd 1,1,1
 
 section .bss
-
+char_bss resb 1
+int_bss resw 1
+int_array resw 3
 ```
+----
+
+#### 变量大小
+byte
+word
+dword
+qword
 
 ----
 
