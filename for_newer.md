@@ -144,6 +144,33 @@ qword
 
 ----
 
+### 汇编前置-函数声明
+```cpp
+int diy();
+int main()
+{
+	diy();
+	return 0;
+}
+int diy()
+{
+	cout<<1;
+}
+```
+```x86asm
+section .text
+global _main
+_main:
+	;function body
+	
+global _diy
+_diy:
+	;function bogy
+```
+
+
+----
+
 ## 函数调用
 + jmp, call
 + 函数调用约定
