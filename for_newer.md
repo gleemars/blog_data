@@ -110,6 +110,8 @@ int int_array_bss[3];
 
 int main(){}
 ```
+---
+
 ```x86asm
 section .data
 char_data db 1
@@ -121,9 +123,11 @@ char_bss resb 1
 int_bss resw 1
 int_array resw 3
 ```
+
 ----
 
 #### 变量大小
+
 byte
 word
 dword
@@ -157,6 +161,8 @@ int diy()
 	cout<<1;
 }
 ```
+---
+
 ```x86asm
 section .text
 global _main
