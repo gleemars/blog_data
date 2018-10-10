@@ -96,6 +96,17 @@ CPU-寄存器
 
 ----
 
+
+#### 汇编前置
+```
+section .bss
+
+section .data
+
+section .bss
+
+```
+
 ----
 
 ## 数据移动指令: mov
@@ -202,7 +213,28 @@ int main()
 + 设置寄存器: mov
 + 设置好寄存器之后: syscall
 
+----
 
+### 其他汇编指令
+
+----
+
+#### lea
++ 获得var_name这个变量的地址
+
+```x86asm
+lea rax,[var_name]
+```
+----
+
+### 其他需要了解的知识 I
+1. flag寄存器
+2. cmp,test 指令
+3. 有条件的jmp指令
+
++ 用以上内容实现 高级编程语言的 if 语句和 循环语句
+
+----
 
 
 
