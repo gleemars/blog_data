@@ -71,9 +71,10 @@ CPU-寄存器
 
 ----
 
-----
 
  ### demo1
+ 
+ + 看寄存器
 
 ----
 
@@ -98,14 +99,15 @@ CPU-寄存器
 ----
 
 ## 数据移动指令: mov
-> 数据存在寄存器与内存中
-> 两个操作数大小应该一样
++ 数据存在寄存器与内存中
++ 两个操作数大小应该一样
 
-![mov](https://www.github.com/Byzero512/blog_img/raw/master/1539085603626.png)
+![data-where](https://www.github.com/Byzero512/blog_img/raw/master/1539149605842.png)
 
 ----
 
 ### demo2
+> 将数据在CPU,内存中移动
 
 ----
 
@@ -116,11 +118,9 @@ CPU-寄存器
 
 ----
 
-### jmp, call
+###  demo3-jmp, call
 
 call=push rip+jmp
-
-+ demo3
 
 ----
 
@@ -128,12 +128,90 @@ call=push rip+jmp
 ```c++
 int main()
 {
-	char buf[]="hello_world";
-	write(1,buf,11);
+	char buf[]="Hello World\n";
+	write(1,buf,12);
 	return 0;
 }
 
 ```
+
+----
+
+### 函数调用约定
++ 64位的程序, 函数调用约定为 fastcall
++ fastcall中约定: 函数的前6个参数从左到右放在寄存器 rdi, rsi, rdx,rcx,r8,r9. 超出六个的参数, 从右到左 push到栈里面, 函数的返回值放在rax中
+	- 例如调用 write(1,buf,11)
+	- 1 放在了 rdi, buf放在了rsi, 11放在rdx中
+
++ 对于32位的程序
++ 待会看demo4
+
+----
+
+### 栈帧
++ call func
++ push rbp
++ mov rbp,rsp
++ 栈帧开始
+
+----
+
+#### call func
+![call](https://www.github.com/Byzero512/blog_img/raw/master/1539150796654.png)
+
+----
+
+#### push rbp
+
+![push_rbp](https://www.github.com/Byzero512/blog_img/raw/master/1539151095032.png)
+
+----
+
+#### mov rbp,rsp
+
+![rbp_rsp](https://www.github.com/Byzero512/blog_img/raw/master/1539151397024.png)
+
+----
+
+
+#### demo4
+1. 看一下函数调用时,参数放在哪里
+2. 看下函数调用的过程与栈的变化
+
+----
+
+### 系统调用syscall
++ 操作系统提供给进程的一系列API
++ 系统调用类似于函数调用, 只是函数调用时调用函数来完成任务, 而系统调用则是请求操作系统来完成任务
+
+![userandkernel](https://www.github.com/Byzero512/blog_img/raw/master/1539149165919.png)
+
+----
+
+### 汇编怎么使用syscall
+1. syscall table
+2. set rax
+3. set other Register
+4. syscall
+
+----
+
+### demo5- 用汇编写hello world
++ 先回忆以下之前学过的指令
+	+ mov, add,sub,push,pop,jmp,call
++ 设置寄存器: mov
++ 设置好寄存器之后: syscall
+
+
+
+
+
+
+
+
+
+
+
 
 
 
