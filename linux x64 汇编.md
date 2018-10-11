@@ -206,7 +206,7 @@ lea rsi,dword [var];
 2. signed conversions
 > 由于符号的存在, 要把高位的数字都设置为符号位
 > movsx \<dest>,\<src>, 不支持32位到64位的转换
-> movsxd \<dest>,\<src>, 只由于32位到64位的有符号转换
+> movsxd \<dest>,\<src>, 只用于32位到64位的有符号转换
 
 ![signed_conversion_1](https://www.github.com/Byzero512/blog_img/raw/master/1537342256544.png)
 
@@ -236,7 +236,7 @@ lea rsi,dword [var];
 
 > multiplying two n-bit values produces a 2n-bit result at most
 
-+ unnsigned multiplication: mul
++ unsigned multiplication: mul
 > 操作数不能是立即数
 > mul \<op>, 根据 op 的大小,另一个数放在了 al,ax,eax,rax 中
 
@@ -574,7 +574,7 @@ call <function>
 > 参数: rdi,rsi,rdx,rcx,r8,r9
 
 ### open
-> 返回值是 int
+> 返回值是 int, 即文件描述符
 > 注意是八进制
 1. flags
 
