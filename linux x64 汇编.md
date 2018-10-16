@@ -230,7 +230,7 @@ lea rsi,dword [var];
 > dec \<op> 减一
 > sbb
 
-![sub_1](https://www.github.com/Byzero512/blog_img/raw/master/1537365940910.png)
+![sub_1](https://www.github.com/Byzero512/blog_img/raw/master/1539688113158.png)
 
 3. #### 乘法
 
