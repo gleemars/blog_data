@@ -6,6 +6,9 @@ tags:
 grammar_cjkRuby: true
 ---
 
+## 今晚没有flag，只有helloworld
+
+----
 
 ## 今晚要讲的内容
 冯诺依曼体系结构
@@ -26,6 +29,16 @@ CPU-寄存器
 
 ----
 
+
+## 其他
+1. 操作系统： 管理软件与硬件资源
+2. 程序：代码
+3. 进程： 运行的程序
+
+![softandhard](https://www.github.com/Byzero512/blog_img/raw/master/1540269658137.png)
+
+----
+
 ## 运行一个程序的背后 I
 
 ![load](https://www.github.com/Byzero512/blog_img/raw/master/1539089345619.png)
@@ -38,9 +51,19 @@ CPU-寄存器
 
 ----
 
+## 硬盘、外存
+
+----
+
 ## 主存
 
 ![main_memory](https://www.github.com/Byzero512/blog_img/raw/master/1539079587238.png)
+
+----
+
+## 虚拟内存中的进程
+
+![virtual_memory](https://www.github.com/Byzero512/blog_img/raw/master/1540270085406.png)
 
 ----
 
@@ -51,36 +74,6 @@ CPU-寄存器
 ![stack](https://www.github.com/Byzero512/blog_img/raw/master/1539080073382.png)
 
 - psuh pop
-
-----
-
-## 寄存器
-
-
-![register](https://www.github.com/Byzero512/blog_img/raw/master/1.png "1")
-
-----
-
-## 今晚会讲到的一些寄存器
-- rip: PC
-- rsp: 栈顶指针寄存器
-- rbp: 基址寄存器
-- rflag: 标志寄存器
-- GPR: rax,rdi,rsi,rdx,rcx,r8,r9...
-- ....
-
-----
-
-
- ### demo1
- 
- + 看寄存器
-
-----
-
-## 汇编指令 I -- push,pop 
-+ 入栈: push
-+ 出栈: pop
 
 ----
 
@@ -96,6 +89,57 @@ CPU-寄存器
 
 ----
 
+## 汇编指令 I -- push,pop 
++ 入栈: push
++ 出栈: pop
+
+----
+
+## 寄存器
+
+
+![register](https://www.github.com/Byzero512/blog_img/raw/master/1.png "1")
+
+----
+
+
+## 今晚会讲到的一些寄存器
+- rip: PC
+- rsp: 栈顶指针寄存器
+- rbp: 基址寄存器
+- rflag: 标志寄存器
+- GPR: rax,rdi,rsi,rdx,rcx,r8,r9...
+- ....
+
+----
+
+
+ ### demo1
+ 
+ + 寄存器： rip 
+ + 栈： rbp， rsp
+
+----
+
+## 正式开始讲汇编
+
+----
+
+## 程序与文件结构
+1. 文件后缀： .exe...每一种后缀都对应着一种文件格式
+2. 代码： 指令和数据
+3. 数据： 初始化和未初始化
+
+elf文件格式：
+1. 文件头
+2. .text
+3. .bss ：没有初始化的全局变量
+4. .data：已经初始化了的全局变量 
+
++ readelf 看一下
++ ida观察: demo0 
+
+----
 
 #### 汇编前置-声明变量
 ```cpp
@@ -129,9 +173,9 @@ int_array resw 3
 #### 变量大小
 
 byte
-word
-dword
-qword
+word=2byte
+dword=2word
+qword=2dword
 
 ----
 
