@@ -63,4 +63,10 @@ tags:
 > fake_chunk会被认为是一个 freed large chunk, 所以还要设置 nextsize 链
 > 要绕过 unlink 检查, 而且prev_inuse=1(这里要比smallchunk unlink绕过要麻烦)
 
+### house of orange
+> 实际上是利用malloc的时候如果topchunk小于请求的大小, 会把 topchunk 挂载到 unsortedbin上, 从而实现free的效果
+
+
+### house of rabbit
+> 实际上是利用malloc_consolidate的时候没有检查fastbin的大小.
 
