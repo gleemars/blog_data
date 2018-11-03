@@ -70,3 +70,31 @@ tags:
 ### house of rabbit
 > 实际上是利用malloc_consolidate的时候没有检查fastbin的大小.
 
+### house of Roman
+> 爆破
+> 4bit 爆出 malloc_hook 
+> 12 bit(或者说8bit) 爆 one_gadget
+
+#### 攻击方式
+1. 构建如下double free
+	1. fastbin: fastchunk1 --> attack_chunk --> main_arena
+	2. unsortedbin: attack_chunk 
+
+2. 爆attack_chunk的 fd 的低4bit, 使其指向malloc_hook-0x23
+	1. fastbin: fastchunk1 --> attack_chunk --> malloc_hook-0x23
+	2. unsortedbin: attack_chunk 
+
+3. malloc fastbin
+	1. fastbin: (malloc_hook-0x23)->fd
+	2. unsortedbin: attack_chunk --> malloc_hook-0x23
+> fastbin dup 得到了一个包含malloc_hook的fastchunk
+
+4. 想办法清空fastbin, 但是不能使用 malloc
+	1. fastbin:
+	2. unsortedbin: attack_chunk-->malloc_hook->0x23
+
+5. 改unsortedbin中attack_chunk的 bk 为malloc_hook-0x10
+
+6. unsortedbin attack 是malloc_hook指向 main_arena
+
+7. 使用之前包含malloc_hook的fastchunk, 修改malloc_hook的低24bit, 由于最低的12bit固定, 则使用12bit爆破出onegadget
