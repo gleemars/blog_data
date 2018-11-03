@@ -68,7 +68,8 @@ tags:
 
 
 ### house of rabbit
-> 实际上是利用malloc_consolidate的时候没有检查fastbin的大小.
+> 实际上是利用malloc_consolidate的时候没有检查fastbin的大小(即可以修改fastbin上的chunk的大小,然后调用malloc_consolidate使被修改的free fastchunk成为合法chunk).
+> 然后可以构造overlap
 
 ### house of Roman
 > 爆破
