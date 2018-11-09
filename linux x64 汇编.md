@@ -65,7 +65,7 @@ tags:
 ### 符号声明
 
 #### const 常量声明
-
+> 和c语言中的const不一样, 这里只是声明一个宏变量, 如果要声明一个和c语言中的const变量,只需要将其写入 .rodata即可
 > var_name  equ  var_value
 > such as: SIZE equ 1000
 
