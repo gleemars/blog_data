@@ -49,6 +49,8 @@ name:
 	.skip, 50               @ char name[50]
 intarray:
 	.skip, 20               @ int intarray[5], 转换成byte
+uninit:
+	.space,200
 
 intarray:
 	.rept 4
@@ -157,6 +159,8 @@ _start:
 @===== 第一种 =====
 stp x29,x30,[sp, #-0x30]! @ push {x29,x30} == push x30; push x29
 mov x29,sp
+
+ - List item
 
 @--------------------------------------cur_bp,sp
 @           x29(old_bp)
