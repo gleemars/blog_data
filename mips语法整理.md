@@ -6,6 +6,9 @@ author:
 top: 
 ---
 
+## 前置
+1. mips指令集中, 有很多指令实际上是并不是真正懂的原始指令, 而是类似于宏的存在, 汇编器编译时, 会把这类指令转换成(多条)原始指令
+
 ## 寄存器
 1. $v0 返回值
 2. $sp 栈顶指针寄存器
@@ -19,16 +22,23 @@ top:
 
 > 还有其他寄存器不介绍
 
-
 ## 汇编语言
 
 ### 变量声明
+> 和arm类似
+> varName: varType varValue
+> varType有: .ascii, .asciiz, .byte, .half, .word, .quad, .space ....
+```mipsasm
+	.text
+.global __start   # 是__start不是_start
+__start:
+	# body
+	
+	.data
+hello:
+	.asciiz "hello world"
 
-
-### 
-
-
-
+```
 
 
 
@@ -36,9 +46,12 @@ top:
 + 调用号: $v0
 + 参数: $a0 -- ??
 + 系统调用指令: syscall
++ 返回值放 $v0
 
 
 ## 函数
+
+### 函数调用约定
 1. 保存环境(如果需要的话)
 > $t0 - $t9 由调用者保存
 
@@ -51,6 +64,7 @@ top:
 
 4. 进入子函数, 创建栈帧, 保存上下文
 
+5. 返回值放 $v0
 
 
 ## 指令
