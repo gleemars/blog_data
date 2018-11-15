@@ -68,3 +68,12 @@ top:
 
 ### 数据操作指令
 ![ins5](https://www.github.com/Byzero512/blog_img/raw/master/1542283337136.png)
+
+#### 1. load
+![load_ins](https://www.github.com/Byzero512/blog_img/raw/master/1542283399424.png)
+
+#### 2. store
+![store_ins](https://www.github.com/Byzero512/blog_img/raw/master/1542283489296.png)
+
+#### 3. mov
+![mov_ins](https://www.github.com/Byzero512/blog_img/raw/master/1542283522273.png)
