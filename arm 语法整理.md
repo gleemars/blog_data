@@ -175,7 +175,7 @@ ldp x29,x30,[sp],#0x30   @ pop {x29,x30} == pop x29; pop x30; sp=sp+16
 ret
 
 @===== 第二种 =====
-sub sp,sp,0x10      @ sub的大小取决于栈帧需要多大
+sub sp,sp,0x10      @ sub的大小取决于栈帧需要多大; 没有保存fp, 因为可以通过sp寻址
 
 add sp,sp,0x10
 ret              @ bx lr
