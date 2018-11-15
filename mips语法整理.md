@@ -54,6 +54,12 @@ top:
 
 
 ## 指令
++ des must always be a register.
++ src1 must always be a register.
++ reg2 must always be a register.
++ src2 may be either a register or a 32-bit integer
++ addr must be an valid address. 
+
 ### 算术指令
 ![ins1](https://www.github.com/Byzero512/blog_img/raw/master/1542283194746.png)
 
