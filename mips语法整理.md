@@ -68,7 +68,7 @@ hello:
 
 ### 栈帧
 > 和 x86 类似, 但是会保存保存gp
-> 不需要保存 $ra 到栈的时候不会保存
+> 不需要保存 $ra 到栈的时候不会保存(类似于arm)
 
 ## 指令
 + des must always be a register.
