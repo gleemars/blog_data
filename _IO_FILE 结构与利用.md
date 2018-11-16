@@ -144,7 +144,7 @@ struct _IO_FILE_complete
 struct _IO_FILE_plus
 {
   _IO_FILE file;
-  const struct _IO_jump_t *vtable; // 64位偏移为 0xd8, 32位下偏移为0x94
+  const struct _IO_jump_t *vtable; // 64位偏移为 0xd8, 32位下偏移为0x90
 };
 ```
 
