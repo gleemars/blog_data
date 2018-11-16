@@ -324,7 +324,7 @@ fake_file += p64(buf_addr + 0x10 - 0x88)        # fake_vtable_addr
 
 ### FSOP
 > 通过覆盖 IO_list_all, 使其指向伪造的 \_IO_FILE_plus, 并且该\_IO_FILE_plus中的指针vtable指向伪造的vtable
-> 然后通过close()、exit(0)、abort，使程序或者文件关闭,程序或者文件关闭时,需要刷新缓存,此时会调用vtable中的__overflow
+> 然后通过close()、exit(0)、abort，程序从main()返回, 使程序或者文件关闭,程序或者文件关闭时,需要刷新缓存,此时会调用vtable中的__overflow
 > 再基于 fake vtable 的攻击就可以将 调用__overflow() --> system('/bin/sh\x00')
 
 #### 攻击前提
