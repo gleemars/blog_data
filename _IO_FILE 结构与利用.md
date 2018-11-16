@@ -299,8 +299,8 @@ struct _IO_wide_data wd;
 
 + 攻击前提
 	1. 能控制_IO_FILE_plus的起始位置
-	2. 能控制_IO_FILE_plus的指针成员vtable,使其指向位置的vtable
-	3. 能在某段内存位置vtable
+	2. 能控制_IO_FILE_plus的指针成员vtable,使其指伪造的vtable
+	3. 能在某段内存放置伪造的vtable
 + 局限性
 	1. 从libc2.24开始,由于新增加了对vtable的检查,伪造vtable就不能用了
 
