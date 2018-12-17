@@ -10,8 +10,8 @@ top:
 ## 数组
 ```java
 int[] int_array={1,2,3,4};
-int[] int_array=new int[4]
-function(new int_array[]{1,2,3,4})
+int[] int_array=new int[4];
+function(new int_array[]{1,2,3,4});
 ```
 
 ## 函数
