@@ -55,7 +55,8 @@ public class exceptdiy extends Exception{
 import java.io.File
 import java.util.Scanner
 import java.io.PrintWriter
-File fileobj=new File
+String fpath="file path";
+File fileobj=new File()
 
 
 ```
