@@ -19,18 +19,17 @@ public static func() throws exception1,exception2{
 }
 
 public static funcname()
-throws exception1{
-try{
-	throws exception1;
-}
-catch (exception1 | exception2 ex){
-	
-}
+	throws exception1{
+	try{
+		throws exception1;
+	}
+	catch (exception1 | exception2 ex){
+		//body
+	}
 
-finally{
-
-}
-
+	finally{
+	// body
+	}
 }
 
 ```
