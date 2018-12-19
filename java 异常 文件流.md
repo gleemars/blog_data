@@ -50,6 +50,15 @@ public class exceptdiy extends Exception{
 
 ## 文件读写
 
+### try-with-resource 块
+```java
+try(Scanner input=new Scanner(new File(fpath))){
+	// body
+}
+
+```
+
+
 ### Scanner 和 PrintWriter
 ```java
 import java.io.File
@@ -62,5 +71,6 @@ Scanner input=new Scanner(file_obj);
 PrintWriter output=new PrintWriter(fpath)
 // PrintWriter output=new PrintWriter(fpath)
 
-
 ```
+
+### 
