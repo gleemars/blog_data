@@ -56,7 +56,8 @@ import java.io.File
 import java.util.Scanner
 import java.io.PrintWriter
 String fpath="file path";
-File fileobj=new File()
+File fileobj=new File(fpath)
+Scanner input=new Scanner(file_obj)
 
 
 ```
