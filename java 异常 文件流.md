@@ -39,6 +39,10 @@ public static funcname()
 > 异常抛出现在函数内部处理
 
 ```java
-public class exceptDiy
+public class exceptdiy extends Exception{
 
+	public exceptdiy() {
+		System.out.println("exception diy");
+	}
+}
 ```
