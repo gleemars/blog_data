@@ -46,3 +46,15 @@ public class exceptdiy extends Exception{
 	}
 }
 ```
+
+
+## 文件读写
+
+### Scanner 和 PrintWriter
+```java
+import java.io.File
+import java.util.Scanner
+File fileobj=new File
+
+
+```
