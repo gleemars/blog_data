@@ -21,7 +21,7 @@ public static func() throws exception1,exception2{
 public static funcname()
 	throws exception1{
 	try{
-		throws exception1;
+		throws new exception1;
 	}
 	catch (exception1 | exception2 ex){
 		//body
@@ -34,4 +34,11 @@ public static funcname()
 
 ```
 
+### 自定义异常
+> 需要先注册
+> 异常抛出现在函数内部处理
 
+```java
+public class exceptDiy
+
+```
