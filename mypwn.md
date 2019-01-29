@@ -23,7 +23,7 @@ top:
 
 ## fmt
 ### fmt_payload(): 返回格式化字符串攻击的payload
-> fmt_payload(offset, writes={}, just_change_low_bit=1, change_all_bits=0, show_payload=0)
+> fmt_payload(offset, writes={}, just_change_low_bit=1, write_size='byte',change_all_bits=0, show_payload=0)
 
 > 参数解析
 > 1. offset: 为格式化字符串的offset
