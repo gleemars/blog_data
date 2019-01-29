@@ -48,7 +48,7 @@ top:
 
 
 ## patch
-### exchangeGot(): 交换文件函数got表的位置, 以达到防御的目的
+### exchangeGot(): 交换bin文件函数got表的位置, 以达到防御的目的
 > exchangeGot(fpath)
 
 > 参数解析
