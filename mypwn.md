@@ -44,7 +44,7 @@ top:
 > 参数解析
 > 1. iofile_addr: iofile结构体在内存的地址
 > 2. writes={}: {'read':addr} 或者 {'puts'|'write':addr} 或者 {'finish':addr} 或者 {'overflow':addr}
-> 3. ptr_to_zero=0: 一个为0的区域, 以设置结构体中的lock的位置, 如果不提供会自动生成
+> 3. ptr_to_zero=0: 一个指向为0的区域的指针, 以设置结构体中的lock的位置, 如果不提供会自动生成
 
 
 ## patch
