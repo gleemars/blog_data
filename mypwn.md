@@ -31,7 +31,7 @@ top:
 > 3. just_change_low_bit: 如果设置为1, 只会根据writes={}提供的键值对, 修改对应地址的低位, 否则会用 "\x00" 补全, 修改完整的 8 bytes 或者 4 bytes
 
 ### fmt_offset(): 返回格式化字符串攻击的offset
-> fmt_offset(fmtstr_posi,esp_posi)
+> fmt_offset(fmtstr_posi,sp_posi)
 
 > 参数解析
 > 1. fmtstr_posi: 格式化字符串在内存(栈)的位置
