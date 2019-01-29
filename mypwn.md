@@ -29,8 +29,9 @@ top:
 > 1. offset: 为格式化字符串的offset
 > 2. writes: 提供 {addr:value}
 > 3. just_change_low_bit: 如果设置为1, 只会根据writes={}提供的键值对, 修改对应地址的低位, 否则会用 "\x00" 补全, 修改完整的 8 bytes 或者 4 bytes
-> 4. change_all_bits: 在amd64中, 地址是 6 bytes, 默认情况下, 只生成改6bytes的payload以减少长度, 如果change_all_bits被设置为1, 那么会改8bytes
-> 5. show_payload: 如果设置了, 会把payload输出到stdin
+> 4. write_size: 决定使用 '%hhn' 改还是使用 '%hn' 改
+> 5. change_all_bits: 在amd64中, 地址是 6 bytes, 默认情况下, 只生成改6bytes的payload以减少长度, 如果change_all_bits被设置为1, 那么会改8bytes
+> 6. show_payload: 如果设置了, 会把payload输出到stdin
 
 
 ### fmt_offset(): 返回格式化字符串攻击的offset
