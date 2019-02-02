@@ -34,7 +34,7 @@ top:
 > 6. try_best: 取值为0, 1, 2. 为0时会生成稳定的缩短过的payload	, 为 1 和 2 时生成的payload极度简化, 但是极度不稳定
 
 
-### fmt_offset(): 返回格式化字符串攻击的offset
+### fmt_offset(): 返回格式化字符串攻击的offset, 已经在gdb脚本中实现
 > fmt_offset(fmtstr_posi,sp_posi)
 
 > 参数解析
