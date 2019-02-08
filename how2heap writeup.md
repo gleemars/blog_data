@@ -462,3 +462,6 @@ p.interactive()
 
 
 ```
+
+### house of roman
+> aslr 下从未爆破成功过
