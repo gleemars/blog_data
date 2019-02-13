@@ -410,7 +410,7 @@ fileno=0
 0xa8  _freeres_list
 0xb0  _freeres_buf
 0xb8  __pad5
-0xc0  **_mode**
+0xc0  _mode
 0xc4  _unused2
 0xd8  **vtable**
 ```
