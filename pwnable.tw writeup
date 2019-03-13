@@ -39,7 +39,7 @@ top:
 1. 函数参数阶段, 如 system("123456||/bin/sh\x00")也可以getshell
 
 
-## silver_bullet ?????? 待解决, strncat 的问题
+## silver_bullet
 ### 漏洞
 1. off by one
 
